@@ -17,10 +17,33 @@ const ACCENTS = [
 ];
 
 const FOOTER_LINKS = {
-  Company: ["About us", "Careers", "Blog", "Press"],
-  Customers: ["Find workers", "How it works", "Safety center", "Help & support"],
-  Workers: ["Become a worker", "Worker resources", "Verification process"],
-  Legal: ["Terms of service", "Privacy policy", "Cookie policy"],
+  Company: [
+    { label: "About us", href: "/about" },
+    { label: "Careers", href: "/careers" },
+    { label: "Blog", href: "/blog" },
+    { label: "Press", href: "/press" },
+  ],
+  Customers: [
+    { label: "Find workers", href: "/workers" },
+    { label: "How it works", href: "/how-it-works" },
+    { label: "Safety center", href: "/safety-center" },
+    { label: "Help & support", href: "/help" },
+  ],
+  Workers: [
+    { label: "Become a worker", href: "/become-worker" },
+    { label: "Worker resources", href: "/worker-resources" },
+    { label: "Verification process", href: "/verification-process" },
+  ],
+  Legal: [
+    { label: "Terms of service", href: "/terms" },
+    { label: "Privacy policy", href: "/privacy" },
+    { label: "Cookie policy", href: "/cookies" },
+  ],
+  Founders: [
+    {label:"About me", href:"/about-me"},
+    { label: "Contact us", href: "/contact-us" },
+    { label: "Investor relations", href: "/investors" },
+  ],          
 };
 
 export default function HomePage() {
@@ -294,13 +317,13 @@ export default function HomePage() {
                   {heading}
                 </h3>
                 <ul className="space-y-2.5">
-                  {links.map((label) => (
-                    <li key={label}>
+                  {links.map((link) => (
+                    <li key={link.label}>
                       <Link
-                        href="#"
+                        href={link.href}
                         className="text-sm text-slate-300 hover:text-[#E8A33D] transition-colors"
                       >
-                        {label}
+                        {link.label}
                       </Link>
                     </li>
                   ))}

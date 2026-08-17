@@ -18,6 +18,34 @@ body {
   font-family: var(--font-display);
 }
 
+/* add to globals.css */
+.prose-content h2 {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  color: #101B2B;
+  margin-top: 1.75rem;
+  margin-bottom: 0.5rem;
+}
+.prose-content h2:first-child {
+  margin-top: 0;
+}
+.prose-content p {
+  color: #475569;
+  line-height: 1.75;
+  margin-bottom: 0.75rem;
+}
+.prose-content ul {
+  list-style: disc;
+  padding-left: 1.25rem;
+  color: #475569;
+  margin-bottom: 0.75rem;
+}
+.prose-content li {
+  margin-bottom: 0.4rem;
+}
+
+
+
 /* subtle blueprint grid for hero background */
 .bg-blueprint {
   background-image:
