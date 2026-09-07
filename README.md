@@ -91,3 +91,13 @@ directly in the UI without you needing to open devtools.
 7. Log back in as the worker, go to `/worker/dashboard`, **Accept** the booking,
    then walk it through **Start job → Mark completed**.
 8. Log back in as the customer, `/dashboard` should reflect the updated status.
+
+
+
+
+
+
+
+
+
+

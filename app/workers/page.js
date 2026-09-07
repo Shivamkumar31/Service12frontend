@@ -69,7 +69,8 @@ function WorkersContent() {
             {workers.length} {workers.length === 1 ? "worker" : "workers"} found
           </span>
           <h1 className="font-display text-3xl sm:text-4xl text-[#101B2B] mt-3 tracking-tight">
-            Find workers
+            Find workers 
+
           </h1>
           <p className="text-slate-500 text-sm mt-1">
             Filter by trade, set your radius, and book verified help near you.

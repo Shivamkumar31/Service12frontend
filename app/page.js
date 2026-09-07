@@ -85,7 +85,7 @@ export default function HomePage() {
               transition={{ duration: 0.6, delay: 0.1 }}
               className="font-display mt-5 text-4xl sm:text-5xl lg:text-[3.4rem] leading-[1.05] tracking-tight text-[#101B2B]"
             >
-              Book trusted local
+              Book trusted11 local
               <br />
               workers<span className="text-[#E8A33D]">.</span>
             </motion.h1>
@@ -110,7 +110,7 @@ export default function HomePage() {
                   href="/workers"
                   className="inline-flex items-center gap-2 bg-[#101B2B] text-white px-6 py-3.5 rounded-full font-medium shadow-lg shadow-[#101B2B]/10 hover:bg-[#1c2f47] transition-colors"
                 >
-                  Find a worker
+                  Find a worker1
                   <span aria-hidden>→</span>
                 </Link>
               </motion.div>
