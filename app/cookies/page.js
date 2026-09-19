@@ -1,6 +1,6 @@
 import StaticPageLayout from "../../components/StaticPageLayout";
 
-export const metadata = { title: "Cookie policy — ServiceHub11" };
+export const metadata = { title: "Cookie policy", description: "Getworkfy's cookie policy.", alternates: { canonical: "/cookies" } };
 
 export default function CookiesPage() {
   return (

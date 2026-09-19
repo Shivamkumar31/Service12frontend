@@ -1,18 +1,18 @@
 import StaticPageLayout from "../../components/StaticPageLayout";
 
-export const metadata = { title: "Terms of service — ServiceHub11" };
+export const metadata = { title: "Terms of service", description: "Getworkfy's terms of service.", alternates: { canonical: "/terms" } };
 
 export default function TermsPage() {
   return (
     <StaticPageLayout eyebrow="Legal" title="Terms of service" subtitle="Last updated: 2026">
-      <h2>1. Using ServiceHub11</h2>
+      <h2>1. Using Getworkfy</h2>
       <p>
-        By using ServiceHub11, you agree to book and provide services in good faith and in
+        By using Getworkfy, you agree to book and provide services in good faith and in
         accordance with local laws.
       </p>
       <h2>2. Bookings</h2>
       <p>
-        Bookings made through the platform are between the customer and the worker. ServiceHub11
+        Bookings made through the platform are between the customer and the worker. Getworkfy
         facilitates the connection but is not a party to the service agreement.
       </p>
       <h2>3. Worker verification</h2>

@@ -1,15 +1,16 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { Suspense, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { api } from "../../lib/api";
 import { useAuth } from "../../lib/auth-context";
 import ErrorText from "../../components/ErrorText";
 
-export default function RegisterPage() {
+function RegisterForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { login } = useAuth();
   const [form, setForm] = useState({ name: "", email: "", password: "", address: "" });
   const [error, setError] = useState("");
@@ -25,6 +26,7 @@ export default function RegisterPage() {
       setLocating(false);
       return;
     }
+
     navigator.geolocation.getCurrentPosition(
       (pos) => {
         setCoords({ lat: pos.coords.latitude, lng: pos.coords.longitude });
@@ -47,9 +49,11 @@ export default function RegisterPage() {
         payload.lat = coords.lat;
         payload.lng = coords.lng;
       }
+
       const res = await api.register(payload);
       login(res.token, res.user);
-      router.push("/dashboard");
+      const returnTo = searchParams.get("returnTo");
+      router.push(returnTo?.startsWith("/") && !returnTo.startsWith("//") ? returnTo : "/dashboard");
     } catch (err) {
       setError(err.message);
     } finally {
@@ -71,7 +75,7 @@ export default function RegisterPage() {
             className="font-display text-2xl tracking-tight text-[#101B2B] inline-flex items-center gap-1.5"
           >
             <span className="w-2 h-2 rounded-full bg-[#E8A33D]" />
-            ServiceHub<span className="text-[#E8A33D]">11</span>
+            Getworkfy
           </Link>
         </div>
 
@@ -185,5 +189,19 @@ export default function RegisterPage() {
         </p>
       </motion.div>
     </div>
+  );
+}
+
+export default function RegisterPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-[calc(100vh-64px)] bg-[#F7F5F0] bg-blueprint flex items-center justify-center px-4 py-12">
+          <span className="w-6 h-6 border-2 border-slate-300 border-t-[#E8A33D] rounded-full animate-spin" />
+        </div>
+      }
+    >
+      <RegisterForm />
+    </Suspense>
   );
 }

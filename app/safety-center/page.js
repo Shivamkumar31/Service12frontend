@@ -1,6 +1,6 @@
 import StaticPageLayout from "../../components/StaticPageLayout";
 
-export const metadata = { title: "Safety center — ServiceHub11" };
+export const metadata = { title: "Safety center", description: "Learn how Getworkfy helps keep local service bookings safe.", alternates: { canonical: "/safety-center" } };
 
 export default function SafetyCenterPage() {
   return (
@@ -23,8 +23,8 @@ export default function SafetyCenterPage() {
       <h2>Report a concern</h2>
       <p>
         Email{" "}
-        <a href="mailto:safety@servicehub11.com" className="text-[#2E6E8E] font-medium">
-          safety@servicehub11.com
+        <a href="mailto:support@getworkfy.in" className="text-[#2E6E8E] font-medium">
+          support@getworkfy.in
         </a>{" "}
         and we'll respond promptly.
       </p>

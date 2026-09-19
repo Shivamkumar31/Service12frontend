@@ -1,6 +1,6 @@
 import StaticPageLayout from "../../components/StaticPageLayout";
 
-export const metadata = { title: "How it works — ServiceHub11" };
+export const metadata = { title: "How it works", description: "Learn how to find and book verified local workers with Getworkfy.", alternates: { canonical: "/how-it-works" } };
 
 const STEPS = [
   { n: "01", t: "Search your need", d: "Pick a category — plumbing, electrical, tutoring, and more — or search directly." },
@@ -13,7 +13,7 @@ export default function HowItWorksPage() {
   return (
     <StaticPageLayout
       eyebrow="Guide"
-      title="How ServiceHub11 works"
+      title="How Getworkfy works"
       subtitle="From search to booking in four simple steps."
     >
       <div className="space-y-5 not-prose">

@@ -1,6 +1,6 @@
 import StaticPageLayout from "../../components/StaticPageLayout";
 
-export const metadata = { title: "Careers — ServiceHub11" };
+export const metadata = { title: "Careers", description: "Explore careers and opportunities at Getworkfy.", alternates: { canonical: "/careers" } };
 
 const OPEN_ROLES = [
   { title: "Backend Engineer", type: "Full-time · Remote" },
@@ -13,7 +13,7 @@ export default function CareersPage() {
   return (
     <StaticPageLayout
       eyebrow="Join us"
-      title="Careers at ServiceHub11"
+      title="Careers at Getworkfy"
       subtitle="Help us build the easiest way to find trusted local help."
     >
       <h2>Open roles</h2>
@@ -28,7 +28,7 @@ export default function CareersPage() {
               <p className="text-xs text-slate-500 mt-0.5">{role.type}</p>
             </div>
             <a
-              href="mailto:careers@servicehub11.com"
+              href="mailto:support@getworkfy.in"
               className="text-sm font-medium text-[#2E6E8E] hover:text-[#101B2B] transition-colors"
             >
               Apply →
@@ -39,8 +39,8 @@ export default function CareersPage() {
       <h2>Don't see a fit?</h2>
       <p>
         We're always open to meeting good people. Write to us at{" "}
-        <a href="mailto:careers@servicehub11.com" className="text-[#2E6E8E] font-medium">
-          careers@servicehub11.com
+        <a href="mailto:support@getworkfy.in" className="text-[#2E6E8E] font-medium">
+          support@getworkfy.in
         </a>
         .
       </p>

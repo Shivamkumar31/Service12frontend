@@ -7,7 +7,11 @@ export default function WorkerCard({ worker }) {
     <Link href={`/workers/${worker._id}`} className="card flex gap-4 hover:shadow-md transition-shadow">
       {wp.photoUrl ? (
         // eslint-disable-next-line @next/next/no-img-element
-        <img src={wp.photoUrl} alt={worker.name} className="w-16 h-16 rounded-full object-cover" />
+        <img
+          src={wp.photoUrl}
+          alt={`${worker.name} - ${wp.category?.name || "local service professional"}`}
+          className="w-16 h-16 rounded-full object-cover"
+        />
       ) : (
         <DummyAvatar name={worker.name} size={64} />
       )}

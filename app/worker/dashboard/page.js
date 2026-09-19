@@ -325,7 +325,7 @@ function WorkerDashboard() {
                     // eslint-disable-next-line @next/next/no-img-element
                     <img
                       src={settingsPreview}
-                      alt="preview"
+                      alt="Worker profile photo preview"
                       className="w-16 h-16 rounded-full object-cover ring-2 ring-[#E8A33D]/30"
                     />
                   ) : (

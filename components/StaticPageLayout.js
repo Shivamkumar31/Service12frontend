@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
+import SiteFooter from "./SiteFooter";
 
 export default function StaticPageLayout({ eyebrow, title, subtitle, children }) {
   return (
@@ -60,6 +61,7 @@ export default function StaticPageLayout({ eyebrow, title, subtitle, children })
           {children}
         </div>
       </motion.section>
+      <SiteFooter />
     </div>
   );
 }

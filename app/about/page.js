@@ -1,18 +1,18 @@
 import StaticPageLayout from "../../components/StaticPageLayout";
 
-export const metadata = { title: "About us — ServiceHub11" };
+export const metadata = { title: "About Getworkfy", description: "Learn how Getworkfy helps people find verified local workers.", alternates: { canonical: "/about" } };
 
 export default function AboutPage() {
   return (
     <StaticPageLayout
       eyebrow="Our story"
-      title="About ServiceHub11"
+      title="About Getworkfy"
       subtitle="We connect people with verified local tradespeople — plumbers, electricians, tutors, and more."
     >
       <h2>Why we started</h2>
       <p>
         Finding a trustworthy plumber or electrician at short notice is harder than it should be.
-        ServiceHub11 was built to fix that — a simple, honest way to find verified workers near
+        Getworkfy was built to fix that — a simple, honest way to find verified workers near
         you, see what they charge, and book them in minutes.
       </p>
       <h2>What we stand for</h2>

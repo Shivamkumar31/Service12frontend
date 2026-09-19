@@ -1,6 +1,6 @@
 import StaticPageLayout from "../../components/StaticPageLayout";
 
-export const metadata = { title: "Privacy policy — ServiceHub11" };
+export const metadata = { title: "Privacy policy", description: "Getworkfy's privacy policy.", alternates: { canonical: "/privacy" } };
 
 export default function PrivacyPage() {
   return (
@@ -16,8 +16,8 @@ export default function PrivacyPage() {
       <h2>Your data</h2>
       <p>
         You can update or request deletion of your data anytime by contacting{" "}
-        <a href="mailto:privacy@servicehub11.com" className="text-[#2E6E8E] font-medium">
-          privacy@servicehub11.com
+        <a href="mailto:support@getworkfy.in" className="text-[#2E6E8E] font-medium">
+          support@getworkfy.in
         </a>
         .
       </p>

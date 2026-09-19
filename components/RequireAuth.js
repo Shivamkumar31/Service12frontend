@@ -9,6 +9,9 @@ import { useAuth } from "../lib/auth-context";
 export default function RequireAuth({ children, role }) {
   const { user, loading, isAdmin } = useAuth();
   const router = useRouter();
+  const isAuthorized =
+    Boolean(user) &&
+    (!role || (role === "ADMIN" && isAdmin) || (role === "WORKER" && user.roles?.includes("WORKER")));
 
   useEffect(() => {
     if (loading) return;
@@ -25,7 +28,7 @@ export default function RequireAuth({ children, role }) {
     }
   }, [user, loading, role, isAdmin, router]);
 
-  if (loading || !user) return <p className="text-slate-500 text-sm">Loading...</p>;
+  if (loading || !isAuthorized) return <p className="text-slate-500 text-sm">Loading...</p>;
 
   return children;
 }

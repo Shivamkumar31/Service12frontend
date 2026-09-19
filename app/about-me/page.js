@@ -1,4 +1,5 @@
-export const metadata = { title: "About me — ServiceHub11" };
+export const metadata = { title: "About the founder", description: "Meet the founder building Getworkfy.", alternates: { canonical: "/about-me" } };
+import SiteFooter from "../../components/SiteFooter";
 
 const EXPERTISE = [
   "Full-Stack Development (MERN)",
@@ -48,7 +49,7 @@ export default function AboutMePage() {
 
             <p className="mt-3 text-slate-600 text-lg leading-relaxed max-w-xl">
               Final-year B.Tech Computer Science student at IIIT Kottayam, and founder of
-              ServiceHub11 — a platform to connect people with verified local workers.
+              Getworkfy — a platform to connect people with verified local workers.
             </p>
 
             <div className="mt-5 flex flex-wrap gap-3">
@@ -93,7 +94,7 @@ export default function AboutMePage() {
             into real, usable products.
           </p>
           <p className="text-slate-600 leading-relaxed mt-3">
-            As founder and CEO of ServiceHub11, I'm building the product end-to-end — backend
+            As founder and CEO of Getworkfy, I'm building the product end-to-end — backend
             architecture, frontend design, and the AI-assisted features layered on top — with the
             goal of making it simple and reliable to find trustworthy local help.
           </p>
@@ -111,6 +112,7 @@ export default function AboutMePage() {
           </ul>
         </div>
       </section>
+      <SiteFooter />
     </div>
   );
 }
