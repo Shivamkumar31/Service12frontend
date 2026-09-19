@@ -7,6 +7,7 @@ import { api } from "../../../lib/api";
 import { useAuth } from "../../../lib/auth-context";
 import DummyAvatar from "../../../components/DummyAvatar";
 import ErrorText from "../../../components/ErrorText";
+import SiteFooter from "../../../components/SiteFooter";
 
 export default function WorkerProfilePage() {
   const { id } = useParams();
@@ -21,6 +22,7 @@ export default function WorkerProfilePage() {
   const [booking, setBooking] = useState(false);
   const [bookError, setBookError] = useState("");
   const [success, setSuccess] = useState("");
+  const today = new Date().toISOString().slice(0, 10);
 
   useEffect(() => {
     api
@@ -36,8 +38,21 @@ export default function WorkerProfilePage() {
     setSuccess("");
 
     if (!user) {
-      router.push("/login");
+      router.push(`/login?returnTo=${encodeURIComponent(`/workers/${id}`)}`);
       return;
+    }
+
+    if (form.serviceDate < today) {
+      setBookError("Please choose today or a future date.");
+      return;
+    }
+
+    if (form.serviceDate === today) {
+      const currentTime = new Date().toTimeString().slice(0, 5);
+      if (form.serviceTime <= currentTime) {
+        setBookError("Please choose a future time for today.");
+        return;
+      }
     }
 
     setBooking(true);
@@ -73,6 +88,7 @@ export default function WorkerProfilePage() {
   const hourlyRate = wp.hourlyRate ?? wp.pricePerHour ?? wp.rate ?? null;
 
   return (
+    <>
     <div className="bg-[#F7F5F0] min-h-screen">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-10">
         <div className="grid md:grid-cols-3 gap-6 items-start">
@@ -95,7 +111,7 @@ export default function WorkerProfilePage() {
                     // eslint-disable-next-line @next/next/no-img-element
                     <img
                       src={wp.photoUrl}
-                      alt={worker.name}
+                      alt={`${worker.name} - ${wp.category?.name || "local service professional"}`}
                       className="w-24 h-24 rounded-full object-cover"
                     />
                   ) : (
@@ -185,6 +201,7 @@ export default function WorkerProfilePage() {
                 <input
                   type="date"
                   required
+                  min={today}
                   className="w-full rounded-xl border border-slate-200 bg-[#F7F5F0] px-3.5 py-2.5 text-sm text-[#101B2B] focus:outline-none focus:ring-2 focus:ring-[#E8A33D]/50 focus:border-[#E8A33D] transition"
                   value={form.serviceDate}
                   onChange={(e) => setForm({ ...form, serviceDate: e.target.value })}
@@ -249,5 +266,7 @@ export default function WorkerProfilePage() {
         </div>
       </div>
     </div>
+    <SiteFooter />
+    </>
   );
 }

@@ -26,7 +26,7 @@ export default function Navbar() {
             className="font-display text-2xl tracking-tight text-[#101B2B] flex items-center gap-1.5"
           >
             <span className="w-2 h-2 rounded-full bg-[#E8A33D]" />
-            ServiceHub<span className="text-[#E8A33D]">11</span>
+            Getworkfy
           </Link>
 
           <nav className="flex items-center gap-5 text-sm">
@@ -35,6 +35,13 @@ export default function Navbar() {
               className="relative text-slate-600 hover:text-[#101B2B] transition-colors group hidden sm:inline-block"
             >
               Find workers
+              <span className="absolute left-0 -bottom-1 w-0 h-[1.5px] bg-[#E8A33D] transition-all duration-300 group-hover:w-full" />
+            </Link>
+            <Link
+              href="/how-it-works"
+              className="relative text-slate-600 hover:text-[#101B2B] transition-colors group hidden md:inline-block"
+            >
+              How it works
               <span className="absolute left-0 -bottom-1 w-0 h-[1.5px] bg-[#E8A33D] transition-all duration-300 group-hover:w-full" />
             </Link>
 

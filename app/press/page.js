@@ -1,6 +1,6 @@
 import StaticPageLayout from "../../components/StaticPageLayout";
 
-export const metadata = { title: "Press — ServiceHub11" };
+export const metadata = { title: "Press", description: "Getworkfy press information and enquiries.", alternates: { canonical: "/press" } };
 
 export default function PressPage() {
   return (
@@ -12,8 +12,8 @@ export default function PressPage() {
       <h2>Media inquiries</h2>
       <p>
         For interviews, quotes, or press materials, reach out to{" "}
-        <a href="mailto:press@servicehub11.com" className="text-[#2E6E8E] font-medium">
-          press@servicehub11.com
+        <a href="mailto:support@getworkfy.in" className="text-[#2E6E8E] font-medium">
+          support@getworkfy.in
         </a>
         .
       </p>

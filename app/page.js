@@ -6,6 +6,10 @@ import { motion } from "framer-motion";
 import { api } from "../lib/api";
 import ErrorText from "../components/ErrorText";
 
+function slugify(text = "") {
+  return text.toString().toLowerCase().trim().replace(/[^a-z0-9\s-]/g, "").replace(/\s+/g, "-").replace(/-+/g, "-");
+}
+
 // purely presentational — cycles an accent color per category card, no data/logic change
 const ACCENTS = [
   { bg: "#FDF1DC", ring: "#E8A33D" }, // amber
@@ -85,7 +89,7 @@ export default function HomePage() {
               transition={{ duration: 0.6, delay: 0.1 }}
               className="font-display mt-5 text-4xl sm:text-5xl lg:text-[3.4rem] leading-[1.05] tracking-tight text-[#101B2B]"
             >
-              Book trusted11 local
+              Book trusted local
               <br />
               workers<span className="text-[#E8A33D]">.</span>
             </motion.h1>
@@ -110,35 +114,23 @@ export default function HomePage() {
                   href="/workers"
                   className="inline-flex items-center gap-2 bg-[#101B2B] text-white px-6 py-3.5 rounded-full font-medium shadow-lg shadow-[#101B2B]/10 hover:bg-[#1c2f47] transition-colors"
                 >
-                  Find a worker1
+                  Find a worker
                   <span aria-hidden>→</span>
                 </Link>
               </motion.div>
               <span className="text-sm text-slate-500">No sign-up needed to browse</span>
             </motion.div>
 
-            {/* trust row */}
+            {/* Browse-focused supporting message */}
             <motion.div
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.4 }}
-              className="mt-10 flex items-center gap-6"
+              className="mt-10"
             >
-              <div className="flex -space-x-2.5">
-                {["#E8A33D", "#2E6E8E", "#3F7D5C", "#5B5FA6"].map((c, i) => (
-                  <div
-                    key={i}
-                    className="w-9 h-9 rounded-full border-2 border-[#F7F5F0] flex items-center justify-center text-white text-xs font-semibold"
-                    style={{ backgroundColor: c }}
-                  >
-                    {["RK", "AP", "SM", "NV"][i]}
-                  </div>
-                ))}
-              </div>
-              <div className="text-sm">
-                <span className="font-semibold text-[#101B2B]">4.8/5</span>
-                <span className="text-slate-500"> from 1,200+ bookings</span>
-              </div>
+              <p className="text-sm text-slate-500">
+                Browse local service categories and compare available professionals near you.
+              </p>
             </motion.div>
           </div>
 
@@ -149,7 +141,7 @@ export default function HomePage() {
             transition={{ duration: 0.7, delay: 0.15 }}
             className="relative h-[420px] hidden sm:block"
           >
-            {/* main "booking confirmed" card */}
+            {/* Illustrative browse card; it does not represent a real worker or booking. */}
             <motion.div
               initial={{ opacity: 0, scale: 0.94 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -161,19 +153,19 @@ export default function HomePage() {
                   🔧
                 </div>
                 <div>
-                  <div className="text-sm font-semibold text-[#101B2B]">Ramesh Kumar</div>
-                  <div className="text-xs text-slate-500">Electrician · 2.1 km away</div>
+                  <div className="text-sm font-semibold text-[#101B2B]">Local service professional</div>
+                  <div className="text-xs text-slate-500">Electrician profile</div>
                 </div>
               </div>
               <div className="mt-4 pt-4 border-t border-dashed border-slate-200 flex items-center justify-between">
-                <span className="text-xs text-slate-500">Today, 4:30 PM</span>
+                <span className="text-xs text-slate-500">Browse local options</span>
                 <span className="text-[10px] font-semibold uppercase tracking-wide bg-[#E9F5EE] text-[#3F7D5C] px-2 py-1 rounded-full">
-                  ✅ Confirmed
+                  Explore
                 </span>
               </div>
             </motion.div>
 
-            {/* floating rating chip */}
+            {/* floating browse chip */}
             <motion.div
               className="animate-floaty absolute top-2 -left-2 bg-white rounded-2xl shadow-md px-3.5 py-2.5"
               style={{ "--r": "-4deg" }}
@@ -181,11 +173,11 @@ export default function HomePage() {
               animate={{ opacity: 1 }}
               transition={{ delay: 0.7 }}
             >
-              <div className="text-sm font-semibold text-[#101B2B]">⭐ 4.9</div>
-              <div className="text-[10px] text-slate-400">128 reviews</div>
+              <div className="text-sm font-semibold text-[#101B2B]">Compare profiles</div>
+              <div className="text-[10px] text-slate-400">Choose a service</div>
             </motion.div>
 
-            {/* floating "nearby" chip */}
+            {/* floating local-services chip */}
             <motion.div
               className="animate-floaty absolute top-24 -right-2 bg-white rounded-2xl shadow-md px-3.5 py-2.5"
               style={{ "--r": "5deg", animationDelay: "0.8s" }}
@@ -193,8 +185,8 @@ export default function HomePage() {
               animate={{ opacity: 1 }}
               transition={{ delay: 0.85 }}
             >
-              <div className="text-sm font-semibold text-[#101B2B]">📍 2.1 km</div>
-              <div className="text-[10px] text-slate-400">nearest match</div>
+              <div className="text-sm font-semibold text-[#101B2B]">📍 Local services</div>
+              <div className="text-[10px] text-slate-400">Find help near you</div>
             </motion.div>
 
             {/* category tag stack behind */}
@@ -259,7 +251,7 @@ export default function HomePage() {
                   whileHover={{ y: -6, rotate: i % 2 === 0 ? -1.5 : 1.5 }}
                 >
                   <Link
-                    href={`/workers?category=${c._id}`}
+                    href={`/services/${slugify(c.name)}`}
                     className="block rounded-2xl bg-white ticket-border p-5 text-center shadow-sm hover:shadow-lg transition-shadow"
                   >
                     <div
@@ -304,7 +296,7 @@ export default function HomePage() {
                 className="font-display text-xl tracking-tight text-white flex items-center gap-1.5"
               >
                 <span className="w-2 h-2 rounded-full bg-[#E8A33D]" />
-                ServiceHub<span className="text-[#E8A33D]">11</span>
+                Getworkfy
               </Link>
               <p className="text-sm text-slate-400 mt-3 leading-relaxed max-w-[220px]">
                 Verified local workers, booked in minutes.
@@ -334,19 +326,8 @@ export default function HomePage() {
 
           <div className="mt-12 pt-6 border-t border-dashed border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
             <p className="text-xs text-slate-500">
-              © {new Date().getFullYear()} ServiceHub11. All rights reserved.
+              © {new Date().getFullYear()} Getworkfy. All rights reserved.
             </p>
-            <div className="flex items-center gap-4 text-slate-400">
-              <Link href="#" className="hover:text-[#E8A33D] transition-colors text-sm">
-                Instagram
-              </Link>
-              <Link href="#" className="hover:text-[#E8A33D] transition-colors text-sm">
-                LinkedIn
-              </Link>
-              <Link href="#" className="hover:text-[#E8A33D] transition-colors text-sm">
-                Twitter
-              </Link>
-            </div>
           </div>
         </div>
       </footer>

@@ -1,6 +1,6 @@
 import StaticPageLayout from "../../components/StaticPageLayout";
 
-export const metadata = { title: "Verification process — ServiceHub11" };
+export const metadata = { title: "Worker verification process", description: "Learn how Getworkfy verifies local workers.", alternates: { canonical: "/verification-process" } };
 
 const STEPS = [
   { n: "01", t: "Apply", d: "Submit your category, experience, address, and a photo." },

@@ -1,4 +1,5 @@
-export const metadata = { title: "Investor relations — ServiceHub11" };
+export const metadata = { title: "Investor relations", description: "Investor information for Getworkfy.", alternates: { canonical: "/investors" } };
+import SiteFooter from "../../components/SiteFooter";
 
 const HIGHLIGHTS = [
   { label: "Categories live", value: "6+" },
@@ -22,7 +23,7 @@ export default function InvestorRelationsPage() {
             Building the trust layer for local services
           </h1>
           <p className="mt-3 text-slate-600 text-lg max-w-xl">
-            ServiceHub11 connects everyday households with verified local workers — plumbers,
+            Getworkfy connects everyday households with verified local workers — plumbers,
             electricians, tutors, and more.
           </p>
         </div>
@@ -44,7 +45,7 @@ export default function InvestorRelationsPage() {
             <h2 className="font-display text-xl text-[#101B2B] mb-2">The opportunity</h2>
             <p className="text-slate-600 leading-relaxed">
               Finding a trustworthy local worker is still slow, unreliable, and word-of-mouth
-              driven for most households. ServiceHub11 is building a verified, on-demand
+              driven for most households. Getworkfy is building a verified, on-demand
               marketplace — starting with hyperlocal categories like plumbing, electrical work,
               carpentry, tutoring, photography, and pet care — with a clear path to more
               categories and cities.
@@ -73,11 +74,11 @@ export default function InvestorRelationsPage() {
           <div>
             <h2 className="font-display text-xl text-[#101B2B] mb-2">Get in touch</h2>
             <p className="text-slate-600 leading-relaxed mb-4">
-              For investment inquiries, decks, or a conversation about where ServiceHub11 is
+              For investment inquiries, decks, or a conversation about where Getworkfy is
               headed, reach out directly.
             </p>
             <a
-              href={`mailto:${CONTACT_EMAIL}?subject=Investor inquiry — ServiceHub11`}
+              href={`mailto:${CONTACT_EMAIL}?subject=Investor inquiry — Getworkfy`}
               className="inline-flex items-center gap-2 bg-[#101B2B] text-white font-semibold px-6 py-3 rounded-full hover:bg-[#1c2f47] transition-colors"
             >
               Email founder
@@ -86,6 +87,7 @@ export default function InvestorRelationsPage() {
           </div>
         </div>
       </section>
+      <SiteFooter />
     </div>
   );
 }

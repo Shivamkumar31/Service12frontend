@@ -1,13 +1,14 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { Suspense, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { api } from "../../lib/api";
 import { useAuth } from "../../lib/auth-context";
 import ErrorText from "../../components/ErrorText";
 
-export default function OtpLoginPage() {
+function OtpLoginForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { login } = useAuth();
   const [step, setStep] = useState("phone"); // "phone" | "otp"
   const [phone, setPhone] = useState("");
@@ -30,6 +31,7 @@ export default function OtpLoginPage() {
     } finally {
       setLoading(false);
     }
+
   };
 
   const verify = async (e) => {
@@ -39,7 +41,8 @@ export default function OtpLoginPage() {
     try {
       const res = await api.verifyOtp({ phone, otp, name });
       login(res.token, res.user);
-      router.push("/dashboard");
+      const returnTo = searchParams.get("returnTo");
+      router.push(returnTo?.startsWith("/") && !returnTo.startsWith("//") ? returnTo : "/dashboard");
     } catch (err) {
       setError(err.message);
     } finally {
@@ -98,5 +101,19 @@ export default function OtpLoginPage() {
         </form>
       )}
     </div>
+  );
+}
+
+export default function OtpLoginPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="max-w-md mx-auto card">
+          <span className="w-6 h-6 border-2 border-slate-300 border-t-[#E8A33D] rounded-full animate-spin" />
+        </div>
+      }
+    >
+      <OtpLoginForm />
+    </Suspense>
   );
 }

@@ -1,6 +1,6 @@
 import StaticPageLayout from "../../components/StaticPageLayout";
 
-export const metadata = { title: "Help & support — ServiceHub11" };
+export const metadata = { title: "Help and support", description: "Get help using Getworkfy.", alternates: { canonical: "/help" } };
 
 const FAQS = [
   { q: "How do I cancel a booking?", a: "Go to My bookings from your dashboard and cancel from there." },
@@ -27,8 +27,8 @@ export default function HelpPage() {
       <h2>Still need help?</h2>
       <p>
         Email{" "}
-        <a href="mailto:support@servicehub11.com" className="text-[#2E6E8E] font-medium">
-          support@servicehub11.com
+        <a href="mailto:support@getworkfy.in" className="text-[#2E6E8E] font-medium">
+          support@getworkfy.in
         </a>{" "}
         and we'll get back within a day.
       </p>

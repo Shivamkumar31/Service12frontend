@@ -1,15 +1,16 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { Suspense, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { api } from "../../lib/api";
 import { useAuth } from "../../lib/auth-context";
 import ErrorText from "../../components/ErrorText";
 
-export default function LoginPage() {
+function LoginForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { login } = useAuth();
   const [form, setForm] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
@@ -22,12 +23,14 @@ export default function LoginPage() {
     try {
       const res = await api.login(form);
       login(res.token, res.user);
-      router.push("/dashboard");
+      const returnTo = searchParams.get("returnTo");
+      router.push(returnTo?.startsWith("/") && !returnTo.startsWith("//") ? returnTo : "/dashboard");
     } catch (err) {
       setError(err.message);
     } finally {
       setLoading(false);
     }
+
   };
 
   return (
@@ -44,7 +47,7 @@ export default function LoginPage() {
             className="font-display text-2xl tracking-tight text-[#101B2B] inline-flex items-center gap-1.5"
           >
             <span className="w-2 h-2 rounded-full bg-[#E8A33D]" />
-            ServiceHub<span className="text-[#E8A33D]">11</span>
+            Getworkfy
           </Link>
         </div>
 
@@ -111,5 +114,19 @@ export default function LoginPage() {
         </p>
       </motion.div>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-[calc(100vh-64px)] bg-[#F7F5F0] bg-blueprint flex items-center justify-center px-4 py-12">
+          <span className="w-6 h-6 border-2 border-slate-300 border-t-[#E8A33D] rounded-full animate-spin" />
+        </div>
+      }
+    >
+      <LoginForm />
+    </Suspense>
   );
 }

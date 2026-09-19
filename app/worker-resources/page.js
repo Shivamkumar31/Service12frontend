@@ -1,13 +1,13 @@
 import StaticPageLayout from "../../components/StaticPageLayout";
 
-export const metadata = { title: "Worker resources — ServiceHub11" };
+export const metadata = { title: "Worker resources", description: "Resources for professionals providing services through Getworkfy.", alternates: { canonical: "/worker-resources" } };
 
 export default function WorkerResourcesPage() {
   return (
     <StaticPageLayout
       eyebrow="For workers"
       title="Worker resources"
-      subtitle="Tips to get more bookings and great ratings on ServiceHub11."
+      subtitle="Tips to get more bookings and great ratings on Getworkfy."
     >
       <h2>Getting more bookings</h2>
       <ul>

@@ -1,45 +1,162 @@
 import "./globals.css";
+
 import { AuthProvider } from "../lib/auth-context";
 import Navbar from "../components/Navbar";
 import Script from "next/script";
 
+const SITE_URL = "https://www.getworkfy.in";
+
 export const metadata = {
-  title: "Getworkfy - Book Verified Local Workers Near You",
+  metadataBase: new URL(SITE_URL),
+
+  title: {
+    default: "Getworkfy - Book Verified Local Workers Near You",
+    template: "%s | Getworkfy",
+  },
+
   description:
-    "Getworkfy helps you find and book verified local workers near you. Discover trusted professionals for your service needs.",
+    "Getworkfy helps you find and book verified local workers near you. Discover trusted plumbers, electricians, tutors, carpenters, cleaners and other local service professionals.",
+
   keywords: [
+    "Getworkfy",
     "local workers",
     "verified workers",
+    "local service providers",
     "book local workers",
+    "find workers near me",
     "local services",
     "home services",
-    "Getworkfy",
+    "plumber near me",
+    "electrician near me",
+    "tutor near me",
+    "carpenter near me",
+    "cleaning services",
   ],
-  metadataBase: new URL("https://www.getworkfy.in"),
+
+  applicationName: "Getworkfy",
+
+  authors: [
+    {
+      name: "Getworkfy",
+      url: SITE_URL,
+    },
+  ],
+
+  creator: "Getworkfy",
+  publisher: "Getworkfy",
+
+  category: "Local Services",
+
   alternates: {
-    canonical: "https://www.getworkfy.in",
+    canonical: SITE_URL,
   },
-  openGraph: {
-    title: "Getworkfy - Book Verified Local Workers Near You",
-    description:
-      "Find and book verified local workers near you with Getworkfy.",
-    url: "https://www.getworkfy.in",
-    siteName: "Getworkfy",
-    locale: "en_IN",
-    type: "website",
-  },
+
   robots: {
     index: true,
     follow: true,
+
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
   },
+
+  openGraph: {
+    type: "website",
+    locale: "en_IN",
+
+    url: SITE_URL,
+
+    siteName: "Getworkfy",
+
+    title: "Getworkfy - Book Verified Local Workers Near You",
+
+    description:
+      "Find and book trusted local workers near you. Discover verified plumbers, electricians, tutors, carpenters and more with Getworkfy.",
+
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Getworkfy - Book Verified Local Workers Near You",
+      },
+    ],
+  },
+
+  twitter: {
+    card: "summary_large_image",
+
+    title: "Getworkfy - Book Verified Local Workers Near You",
+
+    description:
+      "Find and book trusted local workers near you with Getworkfy.",
+
+    images: ["/og-image.png"],
+  },
+
+  icons: {
+    icon: "/favicon.png",
+  },
+};
+
+const organizationSchema = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+
+  name: "Getworkfy",
+
+  url: SITE_URL,
+
+  logo: `${SITE_URL}/favicon.png`,
+
+  description:
+    "Getworkfy helps people discover and book verified local workers and service providers.",
+
+  sameAs: [],
+};
+
+const websiteSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+
+  name: "Getworkfy",
+
+  url: SITE_URL,
+
+  description:
+    "Find and book verified local workers and service providers near you.",
+
 };
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
+      <head>
+        {/* Organization structured data */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(organizationSchema),
+          }}
+        />
+
+        {/* Website structured data */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(websiteSchema),
+          }}
+        />
+      </head>
+
       <body>
         <AuthProvider>
           <Navbar />
+
           <main>{children}</main>
         </AuthProvider>
 
@@ -52,8 +169,13 @@ export default function RootLayout({ children }) {
         <Script id="google-analytics" strategy="afterInteractive">
           {`
             window.dataLayer = window.dataLayer || [];
-            function gtag(){window.dataLayer.push(arguments);}
+
+            function gtag() {
+              window.dataLayer.push(arguments);
+            }
+
             gtag('js', new Date());
+
             gtag('config', 'G-7WZ2RZGS6R');
           `}
         </Script>

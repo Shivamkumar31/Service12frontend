@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import SiteFooter from "../../components/SiteFooter";
 
 // 👉 replace these with your real details
 const CONTACT = {
@@ -22,7 +23,7 @@ export default function ContactUsPage() {
   };
 
   const whatsappHref = `https://wa.me/${CONTACT.whatsappNumber}?text=${encodeURIComponent(
-    "Hi, I'd like to get in touch regarding ServiceHub11."
+    "Hi, I'd like to get in touch regarding Getworkfy."
   )}`;
 
   return (
@@ -124,6 +125,7 @@ export default function ContactUsPage() {
           </form>
         </div>
       </section>
+      <SiteFooter />
     </div>
   );
 }

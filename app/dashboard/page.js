@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { api } from "../../lib/api";
 import { useAuth } from "../../lib/auth-context";
@@ -126,6 +127,9 @@ function Dashboard() {
             <p className="text-slate-500 text-sm mt-1">
               Go find a worker to book your first service.
             </p>
+            <Link href="/workers" className="inline-flex mt-5 bg-[#101B2B] text-white text-sm font-medium px-4 py-2.5 rounded-xl hover:bg-[#1c2f47] transition-colors">
+              Find workers
+            </Link>
           </motion.div>
         ) : (
           <div className="grid sm:grid-cols-2 gap-4 mt-4">
