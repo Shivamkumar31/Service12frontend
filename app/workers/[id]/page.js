@@ -21,7 +21,7 @@ export default function WorkerProfilePage() {
   const [form, setForm] = useState({ serviceDate: "", serviceTime: "", notes: "" });
   const [booking, setBooking] = useState(false);
   const [bookError, setBookError] = useState("");
-  const [success, setSuccess] = useState("");
+  const [bookingSummary, setBookingSummary] = useState(null);
   const today = new Date().toISOString().slice(0, 10);
 
   useEffect(() => {
@@ -35,7 +35,6 @@ export default function WorkerProfilePage() {
   const submitBooking = async (e) => {
     e.preventDefault();
     setBookError("");
-    setSuccess("");
 
     if (!user) {
       router.push(`/login?returnTo=${encodeURIComponent(`/workers/${id}`)}`);
@@ -58,7 +57,13 @@ export default function WorkerProfilePage() {
     setBooking(true);
     try {
       await api.createBooking({ workerId: id, ...form });
-      setSuccess("Booking request sent! Track it from My bookings.");
+      setBookingSummary({
+        workerName: worker.name,
+        serviceName: worker.workerProfile?.category?.name || "Local service",
+        serviceDate: form.serviceDate,
+        serviceTime: form.serviceTime,
+        address: worker.address,
+      });
       setForm({ serviceDate: "", serviceTime: "", notes: "" });
     } catch (err) {
       setBookError(err.message);
@@ -82,6 +87,78 @@ export default function WorkerProfilePage() {
     );
   }
   if (!worker) return null;
+
+  if (bookingSummary) {
+    return (
+      <>
+        <div className="bg-[#F7F5F0] min-h-screen px-4 sm:px-6 py-16">
+          <motion.section
+            initial={{ opacity: 0, scale: 0.96, y: 12 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            transition={{ duration: 0.35 }}
+            className="max-w-xl mx-auto rounded-3xl bg-white ticket-border shadow-sm p-8 sm:p-12 text-center"
+            aria-live="polite"
+          >
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ type: "spring", stiffness: 220, damping: 14, delay: 0.15 }}
+              className="mx-auto w-20 h-20 rounded-full bg-[#E9F5EE] text-[#3F7D5C] flex items-center justify-center text-4xl"
+              aria-hidden="true"
+            >
+              ✓
+            </motion.div>
+            <h1 className="font-display text-3xl text-[#101B2B] mt-6">
+              Booking request placed
+            </h1>
+            <p className="text-slate-600 mt-2">
+              Your request has been sent to {bookingSummary.workerName}. You can track updates
+              from My bookings.
+            </p>
+
+            <div className="mt-8 rounded-2xl bg-[#F7F5F0] border border-slate-200 p-5 text-left space-y-3">
+              <div className="flex justify-between gap-4">
+                <span className="text-sm text-slate-500">Service</span>
+                <span className="text-sm font-medium text-[#101B2B] text-right">
+                  {bookingSummary.serviceName}
+                </span>
+              </div>
+              <div className="flex justify-between gap-4">
+                <span className="text-sm text-slate-500">Date</span>
+                <span className="text-sm font-medium text-[#101B2B]">{bookingSummary.serviceDate}</span>
+              </div>
+              <div className="flex justify-between gap-4">
+                <span className="text-sm text-slate-500">Time</span>
+                <span className="text-sm font-medium text-[#101B2B]">{bookingSummary.serviceTime}</span>
+              </div>
+              <div className="flex justify-between gap-4">
+                <span className="text-sm text-slate-500">Address</span>
+                <span className="text-sm font-medium text-[#101B2B] text-right">
+                  {bookingSummary.address || "Saved profile address"}
+                </span>
+              </div>
+            </div>
+
+            <div className="mt-8 flex flex-col sm:flex-row justify-center gap-3">
+              <a
+                href="/dashboard"
+                className="inline-flex justify-center rounded-full bg-[#101B2B] text-white px-6 py-3 font-medium hover:bg-[#1c2f47] transition-colors"
+              >
+                View my bookings
+              </a>
+              <a
+                href="/"
+                className="inline-flex justify-center rounded-full border border-slate-200 text-[#101B2B] px-6 py-3 font-medium hover:border-[#2E6E8E] transition-colors"
+              >
+                Back to home
+              </a>
+            </div>
+          </motion.section>
+        </div>
+        <SiteFooter />
+      </>
+    );
+  }
 
   const wp = worker.workerProfile || {};
   // presentational only — reads whichever pricing field your API returns, no logic added
@@ -239,15 +316,7 @@ export default function WorkerProfilePage() {
               </p>
 
               <ErrorText>{bookError}</ErrorText>
-              {success && (
-                <motion.p
-                  initial={{ opacity: 0, y: 4 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="text-sm text-[#3F7D5C] bg-[#E9F5EE] border border-[#3F7D5C]/20 rounded-xl px-3.5 py-2.5"
-                >
-                  {success}
-                </motion.p>
-              )}
+
 
               <motion.button
                 whileHover={{ scale: booking ? 1 : 1.02 }}

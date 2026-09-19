@@ -15,6 +15,7 @@ function WorkersContent() {
   const [categories, setCategories] = useState([]);
   const [category, setCategory] = useState(searchParams.get("category") || "");
   const [coords, setCoords] = useState(null);
+  const [locationAccuracy, setLocationAccuracy] = useState(null);
   const [radiusKm, setRadiusKm] = useState(25);
   const [workers, setWorkers] = useState([]);
   const [error, setError] = useState("");
@@ -29,7 +30,26 @@ function WorkersContent() {
     setCategory(searchParams.get("category") || "");
   }, [searchParams]);
 
+  useEffect(() => {
+    try {
+      const saved = sessionStorage.getItem("getworkfy-search-location");
+      if (!saved) return;
+      const parsed = JSON.parse(saved);
+      if (Number.isFinite(parsed.lat) && Number.isFinite(parsed.lng)) {
+        setCoords({ lat: parsed.lat, lng: parsed.lng });
+        setLocationAccuracy(parsed.accuracy || null);
+      }
+    } catch {
+      sessionStorage.removeItem("getworkfy-search-location");
+    }
+  }, []);
+
   const search = async (searchCoords = coords) => {
+    const radius = Number(radiusKm);
+    if (!Number.isFinite(radius) || radius < 1 || radius > 100) {
+      setError("Choose a search radius between 1 and 100 km.");
+      return;
+    }
     setLoading(true);
     setError("");
     try {
@@ -37,7 +57,7 @@ function WorkersContent() {
         category: category || undefined,
         lat: searchCoords?.lat,
         lng: searchCoords?.lng,
-        radiusKm,
+        radiusKm: radius,
       });
       setWorkers(res.workers);
     } catch (err) {
@@ -54,18 +74,38 @@ function WorkersContent() {
 
   const detectLocation = () => {
     setLocating(true);
+    setError("");
     navigator.geolocation.getCurrentPosition(
       (pos) => {
         const nextCoords = { lat: pos.coords.latitude, lng: pos.coords.longitude };
         setCoords(nextCoords);
+        setLocationAccuracy(pos.coords.accuracy);
+        sessionStorage.setItem(
+          "getworkfy-search-location",
+          JSON.stringify({ ...nextCoords, accuracy: pos.coords.accuracy })
+        );
         search(nextCoords);
         setLocating(false);
       },
-      () => {
-        setError("Could not get your location. Showing all verified workers instead.");
+      (positionError) => {
+        const message =
+          positionError.code === 1
+            ? "Location permission was denied. Allow location access in your browser or search without a location."
+            : positionError.code === 3
+            ? "Location detection timed out. Try again or search without a location."
+            : "Could not detect your location. Check your device location settings or search without a location.";
+        setError(message);
         setLocating(false);
-      }
+      },
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 300000 }
     );
+  };
+
+  const clearLocation = () => {
+    setCoords(null);
+    setLocationAccuracy(null);
+    sessionStorage.removeItem("getworkfy-search-location");
+    setError("");
   };
 
   return (
@@ -152,6 +192,15 @@ function WorkersContent() {
                 <>📍 Use my location</>
               )}
             </motion.button>
+            {coords && (
+              <button
+                type="button"
+                onClick={clearLocation}
+                className="text-sm text-slate-500 underline underline-offset-4 hover:text-[#2E6E8E]"
+              >
+                Change location
+              </button>
+            )}
 
             <motion.button
               whileHover={{ scale: 1.03 }}
@@ -170,6 +219,13 @@ function WorkersContent() {
               )}
             </motion.button>
           </div>
+          <p className="text-sm text-slate-500 mt-4" aria-live="polite">
+            {coords
+              ? `Showing professionals within ${radiusKm} km of your selected location${
+                  locationAccuracy ? ` (accuracy about ${Math.round(locationAccuracy)} m)` : ""
+                }.`
+              : "Use your location to find professionals near you, or search without a location."}
+          </p>
         </div>
 
         <ErrorText>{error}</ErrorText>

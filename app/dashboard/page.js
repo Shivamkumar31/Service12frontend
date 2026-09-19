@@ -57,10 +57,17 @@ function Dashboard() {
           setLocating(false);
         }
       },
-      () => {
-        setLocError("Could not get your location.");
+      (positionError) => {
+        const message =
+          positionError.code === 1
+            ? "Location permission was denied. Allow location access in your browser and try again."
+            : positionError.code === 3
+            ? "Location detection timed out. Try again or check your device settings."
+            : "Could not get your location. Check your device location settings and try again.";
+        setLocError(message);
         setLocating(false);
-      }
+      },
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 300000 }
     );
   };
 

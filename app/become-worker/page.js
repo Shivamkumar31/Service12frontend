@@ -23,6 +23,7 @@ function BecomeWorkerForm() {
       ? { lat: user.location.coordinates[1], lng: user.location.coordinates[0] }
       : null
   );
+  const [locationAccuracy, setLocationAccuracy] = useState(null);
   const [photoFile, setPhotoFile] = useState(null);
   const [preview, setPreview] = useState(null);
   const [error, setError] = useState("");
@@ -40,12 +41,20 @@ function BecomeWorkerForm() {
     navigator.geolocation.getCurrentPosition(
       (pos) => {
         setCoords({ lat: pos.coords.latitude, lng: pos.coords.longitude });
+        setLocationAccuracy(pos.coords.accuracy);
         setLocating(false);
       },
-      () => {
-        setError("Could not get location — enter address manually and try again, or continue without it.");
+      (positionError) => {
+        const message =
+          positionError.code === 1
+            ? "Location permission was denied. Allow location access in your browser or try again."
+            : positionError.code === 3
+            ? "Location detection timed out. Try again or check your device settings."
+            : "Could not get location. Check your device location settings and try again.";
+        setError(message);
         setLocating(false);
-      }
+      },
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 300000 }
     );
   };
 
@@ -188,6 +197,10 @@ function BecomeWorkerForm() {
                 value={form.experience}
                 onChange={(e) => setForm({ ...form, experience: e.target.value })}
               />
+              <p className="text-xs text-slate-500 mt-1.5">
+                Enter the service area customers should see. Your exact GPS coordinates are used
+                for nearby search and are not shown here.
+              </p>
             </div>
 
             <div>
@@ -233,6 +246,11 @@ function BecomeWorkerForm() {
                 <>📍 Use my current location</>
               )}
             </motion.button>
+            {locationAccuracy && (
+              <p className="text-xs text-slate-500 text-center">
+                GPS location captured with approximately {Math.round(locationAccuracy)} m accuracy.
+              </p>
+            )}
 
             <ErrorText>{error}</ErrorText>
 
