@@ -1,6 +1,6 @@
-# ServiceHub Frontend (Next.js)
+# Getworkfy Frontend (Next.js)
 
-Connects to the ServiceHub backend (`servicehub-backend`) you already have running.
+Connects to the Getworkfy backend (`servicehub-backend`) you already have running.
 Structure/UI is kept plain and functional per request — every screen wires up a
 real backend endpoint. Polish/design pass can come later.
 
@@ -27,6 +27,10 @@ npm run dev
 ```
 
 Frontend: `http://localhost:3000`
+
+Getworkfy is a local-services marketplace for finding plumbers, electricians,
+carpenters, tutors, pet-care providers, photographers, and other local service
+professionals.
 
 ## 3. What's wired up
 
@@ -91,7 +95,6 @@ directly in the UI without you needing to open devtools.
 7. Log back in as the worker, go to `/worker/dashboard`, **Accept** the booking,
    then walk it through **Start job → Mark completed**.
 8. Log back in as the customer, `/dashboard` should reflect the updated status.
-
 
 
 
