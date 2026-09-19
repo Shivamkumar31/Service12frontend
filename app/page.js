@@ -89,9 +89,9 @@ export default function HomePage() {
               transition={{ duration: 0.6, delay: 0.1 }}
               className="font-display mt-5 text-4xl sm:text-5xl lg:text-[3.4rem] leading-[1.05] tracking-tight text-[#101B2B]"
             >
-              Book trusted local
+              Find trusted local
               <br />
-              workers<span className="text-[#E8A33D]">.</span>
+              service professionals<span className="text-[#E8A33D]">.</span>
             </motion.h1>
 
             <motion.p
@@ -100,7 +100,8 @@ export default function HomePage() {
               transition={{ duration: 0.6, delay: 0.2 }}
               className="mt-4 text-slate-600 text-lg max-w-md"
             >
-              Plumbers, electricians, tutors and more — verified, nearby, ready to help.
+              Find plumbers, electricians, carpenters, tutors, pet-care providers and photographers
+              near you. Compare profiles and choose the right local professional for your needs.
             </motion.p>
 
             <motion.div
@@ -221,7 +222,7 @@ export default function HomePage() {
               Browse by category
             </h2>
             <p className="text-slate-500 text-sm mt-1">
-              Pick a trade, see verified workers near you.
+              Choose a service and explore local professionals near you.
             </p>
           </div>
         </div>
@@ -267,6 +268,10 @@ export default function HomePage() {
             })}
           </div>
         )}
+        <p className="text-sm text-slate-500 mt-6 max-w-2xl">
+          Looking for a specific service? Browse plumbing, electrical, carpentry, tutoring,
+          pet-care and photography services on Getworkfy.
+        </p>
       </section>
 
       {/* ---------------- HOW IT WORKS ---------------- */}

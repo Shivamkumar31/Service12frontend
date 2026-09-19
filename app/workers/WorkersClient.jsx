@@ -91,6 +91,14 @@ function WorkersContent() {
             </Link>
             .
           </p>
+          <nav aria-label="Browse services" className="flex flex-wrap gap-x-4 gap-y-2 text-sm mt-4">
+            <Link href="/services/plumbing" className="text-[#2E6E8E] hover:underline">Plumbing</Link>
+            <Link href="/services/electrician" className="text-[#2E6E8E] hover:underline">Electrical</Link>
+            <Link href="/services/carpentry" className="text-[#2E6E8E] hover:underline">Carpentry</Link>
+            <Link href="/services/tutoring" className="text-[#2E6E8E] hover:underline">Tutoring</Link>
+            <Link href="/services/pet-care" className="text-[#2E6E8E] hover:underline">Pet care</Link>
+            <Link href="/services/photography" className="text-[#2E6E8E] hover:underline">Photography</Link>
+          </nav>
         </div>
 
         {/* filter panel — styled like a job-ticket control strip */}

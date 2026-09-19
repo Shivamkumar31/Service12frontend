@@ -167,6 +167,38 @@ export default async function ServicePage({ params }) {
     ],
   };
 
+  const faqItems = [
+    {
+      question: `What ${name.toLowerCase()} services can I find on Getworkfy?`,
+      answer: `Getworkfy helps you explore local ${name.toLowerCase()} professionals for your service needs. Available profiles and service details depend on the professionals currently listed on the platform.`,
+    },
+    {
+      question: `How do I find a ${name.toLowerCase()} professional near me?`,
+      answer: `Open the worker search from this page, choose the relevant service category and use the available search options to explore professionals near you.`,
+    },
+    {
+      question: `Can I compare ${name.toLowerCase()} professionals before booking?`,
+      answer: `Yes. Review the information shown on available professional profiles and choose a provider whose service details and availability match your requirements.`,
+    },
+    {
+      question: `Do I need an account to browse ${name.toLowerCase()} professionals?`,
+      answer: `You can browse available service categories and professional profiles before deciding whether to continue with a booking.`,
+    },
+  ];
+
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqItems.map((item) => ({
+      "@type": "Question",
+      name: item.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: item.answer,
+      },
+    })),
+  };
+
   return (
     <>
       {/* Structured Data */}
@@ -180,6 +212,12 @@ export default async function ServicePage({ params }) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify(breadcrumbSchema),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(faqSchema),
         }}
       />
 
@@ -263,6 +301,49 @@ export default async function ServicePage({ params }) {
                 request a booking.
               </p>
             </article>
+          </div>
+        </section>
+
+        <section className="max-w-6xl mx-auto px-4 sm:px-6 pb-20">
+          <div className="grid md:grid-cols-2 gap-6">
+            <article className="bg-white rounded-2xl p-6 shadow-sm">
+              <h2 className="text-2xl font-semibold text-[#101B2B]">
+                What you can find
+              </h2>
+              <p className="mt-3 text-slate-600 leading-7">
+                Getworkfy helps you explore local {name.toLowerCase()} professionals for your
+                everyday service needs. Review available profiles, compare relevant details and
+                request a booking through the platform when available.
+              </p>
+            </article>
+            <article className="bg-white rounded-2xl p-6 shadow-sm">
+              <h2 className="text-2xl font-semibold text-[#101B2B]">
+                How to choose a {name.toLowerCase()} professional
+              </h2>
+              <p className="mt-3 text-slate-600 leading-7">
+                Start by describing the help you need, then compare available professional
+                profiles and the information shown on Getworkfy. Choose a professional whose
+                experience, availability and service details match your requirements.
+              </p>
+            </article>
+          </div>
+        </section>
+
+        <section className="max-w-4xl mx-auto px-4 sm:px-6 pb-20">
+          <h2 className="font-display text-3xl text-[#101B2B]">Frequently asked questions</h2>
+          <div className="mt-6 space-y-4">
+            {faqItems.map((item) => (
+              <article key={item.question} className="bg-white rounded-2xl p-6 shadow-sm">
+                <h3 className="text-lg font-semibold text-[#101B2B]">{item.question}</h3>
+                <p className="mt-2 text-slate-600 leading-7">{item.answer}</p>
+              </article>
+            ))}
+          </div>
+          <div className="mt-8 flex flex-wrap gap-4 text-sm">
+            <Link href="/workers" className="text-[#2E6E8E] hover:underline">Browse workers</Link>
+            <Link href="/how-it-works" className="text-[#2E6E8E] hover:underline">How it works</Link>
+            <Link href="/safety-center" className="text-[#2E6E8E] hover:underline">Safety center</Link>
+            <Link href="/verification-process" className="text-[#2E6E8E] hover:underline">Verification process</Link>
           </div>
         </section>
 
