@@ -13,7 +13,13 @@ export default function SiteFooter() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-14 pb-8">
         <div className="grid sm:grid-cols-2 md:grid-cols-5 gap-10">
           <div className="md:col-span-1">
-            <Link href="/" className="font-display text-xl tracking-tight text-white flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-[#E8A33D]" />Getworkfy</Link>
+            <Link href="/" aria-label="Getworkfy home" className="inline-flex rounded-lg bg-white p-2">
+              <img
+                src="/getworkfy-logo.png"
+                alt="Getworkfy - Local Services Near You"
+                className="h-12 w-auto max-w-[210px] object-contain"
+              />
+            </Link>
             <p className="text-sm text-slate-400 mt-3 leading-relaxed max-w-[220px]">Verified local workers, booked in minutes.</p>
           </div>
           {Object.entries(FOOTER_LINKS).map(([heading, links]) => (
