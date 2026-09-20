@@ -79,10 +79,10 @@ export const metadata = {
 
     images: [
       {
-        url: "/og-image.png",
+        url: "/getworkfy-logo.png",
         width: 1200,
-        height: 630,
-        alt: "Getworkfy - Book Verified Local Workers Near You",
+        height: 600,
+        alt: "Getworkfy - Local Services Near You",
       },
     ],
   },
@@ -95,7 +95,7 @@ export const metadata = {
     description:
       "Find and book trusted local workers near you with Getworkfy.",
 
-    images: ["/og-image.png"],
+    images: ["/getworkfy-logo.png"],
   },
 
   icons: {
@@ -111,7 +111,7 @@ const organizationSchema = {
 
   url: SITE_URL,
 
-  logo: `${SITE_URL}/favicon.png`,
+  logo: `${SITE_URL}/getworkfy-logo.png`,
 
   description:
     "Getworkfy helps people discover and book verified local workers and service providers.",

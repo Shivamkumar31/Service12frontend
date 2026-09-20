@@ -23,10 +23,14 @@ export default function Navbar() {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
           <Link
             href="/"
-            className="font-display text-2xl tracking-tight text-[#101B2B] flex items-center gap-1.5"
+            className="flex items-center"
+            aria-label="Getworkfy home"
           >
-            <span className="w-2 h-2 rounded-full bg-[#E8A33D]" />
-            Getworkfy
+            <img
+              src="/getworkfy-logo.png"
+              alt="Getworkfy - Local Services Near You"
+              className="h-12 w-auto max-w-[215px] object-contain"
+            />
           </Link>
 
           <nav className="flex items-center gap-5 text-sm">
