@@ -22,9 +22,15 @@ function LoginForm() {
     setLoading(true);
     try {
       const res = await api.login(form);
-      login(res.token, res.user);
+      const loggedInUser = await login(res.token, res.user);
       const returnTo = searchParams.get("returnTo");
-      router.push(returnTo?.startsWith("/") && !returnTo.startsWith("//") ? returnTo : "/dashboard");
+      router.push(
+        returnTo?.startsWith("/") && !returnTo.startsWith("//")
+          ? returnTo
+          : loggedInUser?.role === "admin"
+          ? "/admin"
+          : "/dashboard"
+      );
     } catch (err) {
       setError(err.message);
     } finally {

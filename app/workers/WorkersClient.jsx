@@ -1,4 +1,4 @@
-"use client";"use client";
+"use client";
 
 
 
@@ -9,9 +9,12 @@ import { motion, AnimatePresence } from "framer-motion";
 import { api } from "../../lib/api";
 import WorkerCard from "../../components/WorkerCard";
 import ErrorText from "../../components/ErrorText";
+import Icon from "../../components/Icon";
+import { useAuth } from "../../lib/auth-context";
 
 function WorkersContent() {
   const searchParams = useSearchParams();
+  const { user } = useAuth();
   const [categories, setCategories] = useState([]);
   const [category, setCategory] = useState(searchParams.get("category") || "");
   const [coords, setCoords] = useState(null);
@@ -44,8 +47,8 @@ function WorkersContent() {
     }
   }, []);
 
-  const search = async (searchCoords = coords) => {
-    const radius = Number(radiusKm);
+  const search = async (searchCoords = coords, requestedRadius = radiusKm) => {
+    const radius = Number(requestedRadius);
     if (!Number.isFinite(radius) || radius < 1 || radius > 100) {
       setError("Choose a search radius between 1 and 100 km.");
       return;
@@ -54,12 +57,12 @@ function WorkersContent() {
     setError("");
     try {
       const res = await api.getNearbyWorkers({
-        category: category || undefined,
+        service: category || undefined,
         lat: searchCoords?.lat,
         lng: searchCoords?.lng,
         radiusKm: radius,
       });
-      setWorkers(res.workers);
+      setWorkers(res.workers || res.data?.workers || []);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -68,9 +71,17 @@ function WorkersContent() {
   };
 
   useEffect(() => {
-    search();
+    const radius = Number(radiusKm);
+    if (!Number.isFinite(radius) || radius < 1 || radius > 100) return undefined;
+
+    const refreshTimer = setTimeout(() => {
+      search(coords, radius);
+    }, 350);
+
+    return () => clearTimeout(refreshTimer);
+    // Search intentionally runs after the radius/category controls settle.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [radiusKm, category, coords]);
 
   const detectLocation = () => {
     setLocating(true);
@@ -84,7 +95,6 @@ function WorkersContent() {
           "getworkfy-search-location",
           JSON.stringify({ ...nextCoords, accuracy: pos.coords.accuracy })
         );
-        search(nextCoords);
         setLocating(false);
       },
       (positionError) => {
@@ -108,6 +118,13 @@ function WorkersContent() {
     setError("");
   };
 
+  const currentUserId = user?._id || user?.id;
+  const visibleWorkers = workers.filter((worker) => {
+    const account = worker.userId || worker;
+    const workerUserId = account._id || account.id;
+    return !currentUserId || !workerUserId || String(workerUserId) !== String(currentUserId);
+  });
+
   return (
     <div className="bg-[#F7F5F0] min-h-screen">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-10">
@@ -115,7 +132,7 @@ function WorkersContent() {
         <div className="mb-6">
           <span className="inline-flex items-center gap-2 text-xs font-semibold tracking-widest uppercase text-[#101B2B] bg-white border border-slate-200 px-3 py-1.5 rounded-full shadow-sm">
             <span className="w-1.5 h-1.5 rounded-full bg-[#3F7D5C]" />
-            {workers.length} {workers.length === 1 ? "worker" : "workers"} found
+            {visibleWorkers.length} {visibleWorkers.length === 1 ? "worker" : "workers"} found
           </span>
           <h1 className="font-display text-3xl sm:text-4xl text-[#101B2B] mt-3 tracking-tight">
             Find local service professionals
@@ -162,16 +179,54 @@ function WorkersContent() {
               </select>
             </div>
 
-            <div className="w-28">
-              <label className="text-xs font-semibold uppercase tracking-wide text-slate-500 mb-1.5 block">
-                Radius (km)
-              </label>
+            <div className="flex-1 min-w-[260px] max-w-md">
+              <div className="flex items-center justify-between mb-1.5">
+                <label htmlFor="radius-range" className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                  Search radius
+                </label>
+                <span className="inline-flex items-baseline gap-1 rounded-full bg-[#FFF5E5] px-3 py-1 text-sm font-semibold text-[#101B2B]">
+                  {radiusKm}
+                  <span className="text-[11px] font-medium text-slate-500">km</span>
+                </span>
+              </div>
+              <div className="rounded-xl border border-slate-200 bg-[#F7F5F0] px-4 py-3">
+                <input
+                  id="radius-range"
+                  type="range"
+                  min="1"
+                  max="100"
+                  step="1"
+                  value={radiusKm}
+                  onChange={(e) => setRadiusKm(e.target.value)}
+                  className="radius-slider w-full"
+                  style={{
+                    background: `linear-gradient(to right, #e8a33d 0%, #e8a33d ${
+                      ((Number(radiusKm) - 1) / 99) * 100
+                    }%, #dbe3ea ${((Number(radiusKm) - 1) / 99) * 100}%, #dbe3ea 100%)`,
+                  }}
+                  aria-label="Search radius in kilometres"
+                />
+                <div className="mt-1 flex justify-between text-[10px] font-medium uppercase tracking-wide text-slate-400">
+                  <span>1 km</span>
+                  <span>Nearby</span>
+                  <span>100 km</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <label htmlFor="radius-number" className="sr-only">Exact radius in kilometres</label>
               <input
+                id="radius-number"
                 type="number"
-                className="w-full rounded-xl border border-slate-200 bg-[#F7F5F0] px-3.5 py-2.5 text-sm text-[#101B2B] focus:outline-none focus:ring-2 focus:ring-[#E8A33D]/50 focus:border-[#E8A33D] transition"
+                min="1"
+                max="100"
+                className="w-20 rounded-xl border border-slate-200 bg-[#F7F5F0] px-3 py-2.5 text-sm text-[#101B2B] focus:outline-none focus:ring-2 focus:ring-[#E8A33D]/50 focus:border-[#E8A33D] transition"
                 value={radiusKm}
                 onChange={(e) => setRadiusKm(e.target.value)}
+                aria-label="Exact radius in kilometres"
               />
+              <span className="text-xs text-slate-500">km</span>
             </div>
 
             <motion.button
@@ -187,9 +242,9 @@ function WorkersContent() {
                   Detecting...
                 </>
               ) : coords ? (
-                <>📍 Location set</>
+                <><Icon name="pin" size={16} /> Location set</>
               ) : (
-                <>📍 Use my location</>
+                <><Icon name="pin" size={16} /> Use my location</>
               )}
             </motion.button>
             {coords && (
@@ -219,12 +274,15 @@ function WorkersContent() {
               )}
             </motion.button>
           </div>
-          <p className="text-sm text-slate-500 mt-4" aria-live="polite">
+          <p className="text-sm text-slate-500 mt-4 flex items-center gap-2" aria-live="polite">
+            {loading && (
+              <span className="w-3.5 h-3.5 border-2 border-slate-300 border-t-[#2E6E8E] rounded-full animate-spin" />
+            )}
             {coords
               ? `Showing professionals within ${radiusKm} km of your selected location${
                   locationAccuracy ? ` (accuracy about ${Math.round(locationAccuracy)} m)` : ""
                 }.`
-              : "Use your location to find professionals near you, or search without a location."}
+              : `Showing verified professionals${radiusKm ? ` within ${radiusKm} km` : ""}. Use your location for more accurate results.`}
           </p>
         </div>
 
@@ -237,7 +295,7 @@ function WorkersContent() {
               <div key={i} className="rounded-2xl ticket-border h-32 animate-shimmer" />
             ))}
           </div>
-        ) : workers.length === 0 ? (
+        ) : visibleWorkers.length === 0 ? (
           <motion.div
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
@@ -256,7 +314,7 @@ function WorkersContent() {
         ) : (
           <div className="grid sm:grid-cols-2 gap-4 mt-2">
             <AnimatePresence>
-              {workers.map((w, i) => (
+              {visibleWorkers.map((w, i) => (
                 <motion.div
                   key={w._id}
                   initial={{ opacity: 0, y: 14 }}
