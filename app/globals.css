@@ -2,23 +2,26 @@
 @tailwind components;
 @tailwind utilities;
 
-/* globals.css — add at the very top */
 @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap');
 
 :root {
   --font-display: 'Oswald', sans-serif;
   --font-body: 'Inter', sans-serif;
+  --color-ink: #101b2b;
+  --color-blue: #2e6e8e;
+  --color-gold: #e8a33d;
+  --color-paper: #f7f5f0;
+  --color-line: #dbe3ea;
+  --radius-card: 1rem;
 }
 
 body {
   font-family: var(--font-body);
+  background-color: var(--color-paper);
+  color: var(--color-ink);
 }
 
-.font-display {
-  font-family: var(--font-display);
-}
-
-/* add to globals.css */
+.font-display { font-family: var(--font-display); }
 .prose-content h2 {
   font-family: var(--font-display);
   font-size: 1.25rem;
@@ -46,7 +49,6 @@ body {
 
 
 
-/* subtle blueprint grid for hero background */
 .bg-blueprint {
   background-image:
     linear-gradient(to right, rgba(16, 27, 43, 0.05) 1px, transparent 1px),
@@ -54,9 +56,40 @@ body {
   background-size: 32px 32px;
 }
 
-/* job-ticket dashed stitch border */
 .ticket-border {
   border: 1.5px dashed rgba(16, 27, 43, 0.18);
+}
+
+.radius-slider {
+  appearance: none;
+  height: 6px;
+  border-radius: 999px;
+  background: linear-gradient(to right, #e8a33d 0%, #e8a33d 25%, #dbe3ea 25%, #dbe3ea 100%);
+  cursor: pointer;
+}
+
+.radius-slider::-webkit-slider-thumb {
+  appearance: none;
+  width: 19px;
+  height: 19px;
+  border: 3px solid #fff;
+  border-radius: 50%;
+  background: #e8a33d;
+  box-shadow: 0 1px 5px rgba(16, 27, 43, 0.28);
+}
+
+.radius-slider::-moz-range-thumb {
+  width: 15px;
+  height: 15px;
+  border: 3px solid #fff;
+  border-radius: 50%;
+  background: #e8a33d;
+  box-shadow: 0 1px 5px rgba(16, 27, 43, 0.28);
+}
+
+.radius-slider:focus-visible {
+  outline: 3px solid rgba(232, 163, 61, 0.35);
+  outline-offset: 4px;
 }
 
 @keyframes floaty {
@@ -78,17 +111,8 @@ body {
 }
 
 
-
-
-
-
-body {
-  background-color: #f8fafc;
-  color: #0f172a;
-}
-
 .card {
-  @apply bg-white border border-slate-200 rounded-lg p-4 shadow-sm;
+  @apply bg-white border border-slate-200 rounded-2xl p-5 shadow-sm;
 } 
 
 .btn {

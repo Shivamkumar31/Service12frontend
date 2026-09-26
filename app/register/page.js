@@ -12,48 +12,24 @@ function RegisterForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { login } = useAuth();
-  const [form, setForm] = useState({ name: "", email: "", password: "", address: "" });
+  const [form, setForm] = useState({ name: "", email: "", password: "" });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [locating, setLocating] = useState(false);
-  const [coords, setCoords] = useState(null);
-
-  const detectLocation = () => {
-    setLocating(true);
-    setError("");
-    if (!navigator.geolocation) {
-      setError("Geolocation not supported in this browser — you can still register without it.");
-      setLocating(false);
-      return;
-    }
-
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        setCoords({ lat: pos.coords.latitude, lng: pos.coords.longitude });
-        setLocating(false);
-      },
-      () => {
-        setError("Could not get location — allow permission or enter address manually.");
-        setLocating(false);
-      }
-    );
-  };
-
   const submit = async (e) => {
     e.preventDefault();
     setError("");
     setLoading(true);
     try {
-      const payload = { ...form };
-      if (coords) {
-        payload.lat = coords.lat;
-        payload.lng = coords.lng;
-      }
-
-      const res = await api.register(payload);
-      login(res.token, res.user);
+      const res = await api.register(form);
+      const loggedInUser = await login(res.token, res.user);
       const returnTo = searchParams.get("returnTo");
-      router.push(returnTo?.startsWith("/") && !returnTo.startsWith("//") ? returnTo : "/dashboard");
+      router.push(
+        returnTo?.startsWith("/") && !returnTo.startsWith("//")
+          ? returnTo
+          : loggedInUser?.role === "admin"
+          ? "/admin"
+          : "/dashboard"
+      );
     } catch (err) {
       setError(err.message);
     } finally {
@@ -126,38 +102,6 @@ function RegisterForm() {
                 onChange={(e) => setForm({ ...form, password: e.target.value })}
               />
             </div>
-
-            <div>
-              <label className="text-xs font-semibold uppercase tracking-wide text-slate-500 mb-1.5 block">
-                Address
-              </label>
-              <input
-                className="w-full rounded-xl border border-slate-200 bg-[#F7F5F0] px-3.5 py-2.5 text-sm text-[#101B2B] focus:outline-none focus:ring-2 focus:ring-[#E8A33D]/50 focus:border-[#E8A33D] transition"
-                required
-                value={form.address}
-                onChange={(e) => setForm({ ...form, address: e.target.value })}
-              />
-            </div>
-
-            <motion.button
-              whileHover={{ scale: locating ? 1 : 1.01 }}
-              whileTap={{ scale: locating ? 1 : 0.98 }}
-              type="button"
-              onClick={detectLocation}
-              disabled={locating}
-              className="w-full inline-flex items-center justify-center gap-1.5 text-sm font-medium border border-slate-200 px-4 py-2.5 rounded-xl hover:border-[#2E6E8E] hover:text-[#2E6E8E] transition-colors disabled:opacity-60"
-            >
-              {locating ? (
-                <>
-                  <span className="w-3.5 h-3.5 border-2 border-slate-300 border-t-[#2E6E8E] rounded-full animate-spin" />
-                  Detecting...
-                </>
-              ) : coords ? (
-                <>📍 Location captured</>
-              ) : (
-                <>📍 Use my current location</>
-              )}
-            </motion.button>
 
             <ErrorText>{error}</ErrorText>
 

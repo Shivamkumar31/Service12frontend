@@ -34,7 +34,8 @@ function BecomeWorkerForm() {
     api.listCategories().then((res) => setCategories(res.categories)).catch(() => {});
   }, []);
 
-  const alreadyApplied = user?.roles?.includes("WORKER");
+  const workerProfile = user?.workerProfile;
+  const alreadyApplied = Boolean(workerProfile);
 
   const detectLocation = () => {
     setLocating(true);
@@ -75,7 +76,7 @@ function BecomeWorkerForm() {
     try {
       const fd = new FormData();
       fd.append("categoryId", form.categoryId);
-      fd.append("experience", form.experience);
+      fd.append("experienceYears", form.experience);
       fd.append("description", form.description);
       fd.append("address", form.address);
       fd.append("lat", coords.lat);
@@ -93,12 +94,14 @@ function BecomeWorkerForm() {
   };
 
   if (alreadyApplied) {
-    const status = user.workerProfile?.verification?.status;
+    const status = workerProfile?.status || "pending";
     const statusStyle =
-      status === "VERIFIED"
-        ? { bg: "#E9F5EE", ring: "#3F7D5C", label: "✅ Verified" }
-        : status === "REJECTED"
+      status === "approved"
+        ? { bg: "#E9F5EE", ring: "#3F7D5C", label: "✅ Approved" }
+        : status === "rejected"
         ? { bg: "#FBEAEA", ring: "#C1502E", label: "❌ Rejected" }
+        : status === "suspended"
+        ? { bg: "#F0EDE4", ring: "#8A7A56", label: "⏸️ Suspended" }
         : { bg: "#FDF1DC", ring: "#E8A33D", label: "⏳ Pending review" };
 
     return (
@@ -116,11 +119,27 @@ function BecomeWorkerForm() {
             {statusStyle.label}
           </span>
           <p className="text-slate-700 mt-4">
-            You've already applied as a worker.
+            {status === "approved"
+              ? "Your worker profile is approved and active."
+              : status === "rejected"
+              ? "Your worker application was rejected."
+              : status === "suspended"
+              ? "Your worker account has been suspended."
+              : "Your worker application is under review."}
           </p>
-          {status === "PENDING" && (
+          {status === "pending" && (
             <p className="text-sm text-slate-500 mt-2">
-              An admin needs to verify your application before you can receive bookings.
+              An admin needs to review your application before you can receive bookings.
+            </p>
+          )}
+          {status === "rejected" && (
+            <p className="text-sm text-slate-500 mt-2">
+              Re-submission depends on backend support. Please contact support or try again later if the option is available.
+            </p>
+          )}
+          {status === "suspended" && (
+            <p className="text-sm text-slate-500 mt-2">
+              Your worker account is temporarily disabled. Contact support to reactivate it.
             </p>
           )}
         </motion.div>
@@ -194,12 +213,12 @@ function BecomeWorkerForm() {
                 type="number"
                 min="0"
                 className="w-full rounded-xl border border-slate-200 bg-[#F7F5F0] px-3.5 py-2.5 text-sm text-[#101B2B] focus:outline-none focus:ring-2 focus:ring-[#E8A33D]/50 focus:border-[#E8A33D] transition"
+                required
                 value={form.experience}
                 onChange={(e) => setForm({ ...form, experience: e.target.value })}
               />
               <p className="text-xs text-slate-500 mt-1.5">
-                Enter the service area customers should see. Your exact GPS coordinates are used
-                for nearby search and are not shown here.
+                Tell customers how many years you have worked in this service.
               </p>
             </div>
 
@@ -210,6 +229,7 @@ function BecomeWorkerForm() {
               <textarea
                 rows={3}
                 className="w-full rounded-xl border border-slate-200 bg-[#F7F5F0] px-3.5 py-2.5 text-sm text-[#101B2B] focus:outline-none focus:ring-2 focus:ring-[#E8A33D]/50 focus:border-[#E8A33D] transition resize-none"
+                required
                 value={form.description}
                 onChange={(e) => setForm({ ...form, description: e.target.value })}
               />

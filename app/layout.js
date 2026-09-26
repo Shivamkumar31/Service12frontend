@@ -44,7 +44,6 @@ export const metadata = {
 
   creator: "Getworkfy",
   publisher: "Getworkfy",
-
   category: "Local Services",
 
   alternates: {
@@ -54,7 +53,6 @@ export const metadata = {
   robots: {
     index: true,
     follow: true,
-
     googleBot: {
       index: true,
       follow: true,
@@ -67,13 +65,9 @@ export const metadata = {
   openGraph: {
     type: "website",
     locale: "en_IN",
-
     url: SITE_URL,
-
     siteName: "Getworkfy",
-
     title: "Getworkfy - Book Verified Local Workers Near You",
-
     description:
       "Find and book trusted local workers near you. Discover verified plumbers, electricians, tutors, carpenters and more with Getworkfy.",
 
@@ -89,47 +83,38 @@ export const metadata = {
 
   twitter: {
     card: "summary_large_image",
-
     title: "Getworkfy - Book Verified Local Workers Near You",
-
     description:
       "Find and book trusted local workers near you with Getworkfy.",
-
     images: ["/getworkfy-logo.png"],
   },
 
+  // YOUR LOCAL WEBSITE FAVICON
   icons: {
     icon: "/favicon.png",
+    shortcut: "/favicon.png",
+    apple: "/favicon.png",
   },
 };
 
 const organizationSchema = {
   "@context": "https://schema.org",
   "@type": "Organization",
-
   name: "Getworkfy",
-
   url: SITE_URL,
-
   logo: `${SITE_URL}/getworkfy-logo.png`,
-
   description:
     "Getworkfy helps people discover and book verified local workers and service providers.",
-
   sameAs: [],
 };
 
 const websiteSchema = {
   "@context": "https://schema.org",
   "@type": "WebSite",
-
   name: "Getworkfy",
-
   url: SITE_URL,
-
   description:
     "Find and book verified local workers and service providers near you.",
-
 };
 
 export default function RootLayout({ children }) {
@@ -156,7 +141,6 @@ export default function RootLayout({ children }) {
       <body>
         <AuthProvider>
           <Navbar />
-
           <main>{children}</main>
         </AuthProvider>
 
@@ -175,7 +159,6 @@ export default function RootLayout({ children }) {
             }
 
             gtag('js', new Date());
-
             gtag('config', 'G-7WZ2RZGS6R');
           `}
         </Script>

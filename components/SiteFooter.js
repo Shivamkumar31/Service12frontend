@@ -33,6 +33,32 @@ export default function SiteFooter() {
             <Link href="/contact-us" className="text-sm text-slate-300 hover:text-[#E8A33D] transition-colors">Contact us</Link>
             <Link href="/about-me" className="block mt-2.5 text-sm text-slate-300 hover:text-[#E8A33D] transition-colors">About the founder</Link>
             <Link href="/investors" className="block mt-2.5 text-sm text-slate-300 hover:text-[#E8A33D] transition-colors">Investor relations</Link>
+            <a
+              href="mailto:shivamkumaryaadav04@gmail.com"
+              className="block mt-2.5 text-sm text-slate-300 hover:text-[#E8A33D] transition-colors break-words"
+            >
+              Email for enquiries
+            </a>
+            <div className="mt-4 flex items-center gap-2.5">
+              <a
+                href="https://www.instagram.com/shivamkumaryadav328/"
+                target="_blank"
+                rel="noreferrer"
+                aria-label="Instagram"
+                className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/15 text-xs font-semibold text-slate-300 transition-colors hover:border-[#E8A33D] hover:text-[#E8A33D]"
+              >
+                IG
+              </a>
+              <a
+                href="https://www.linkedin.com/in/shivam-kumar-95a70324b/"
+                target="_blank"
+                rel="noreferrer"
+                aria-label="LinkedIn"
+                className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/15 text-xs font-semibold text-slate-300 transition-colors hover:border-[#E8A33D] hover:text-[#E8A33D]"
+              >
+                in
+              </a>
+            </div>
           </div>
         </div>
         <p className="mt-12 pt-6 border-t border-dashed border-white/10 text-xs text-slate-500">© {new Date().getFullYear()} Getworkfy. All rights reserved.</p>

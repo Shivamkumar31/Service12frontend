@@ -3,16 +3,23 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
+import { useState } from "react";
 import { useAuth } from "../lib/auth-context";
 
 export default function Navbar() {
   const { user, logout, isWorker, isWorkerPending, isAdmin, loading } = useAuth();
   const router = useRouter();
+  const [menuOpen, setMenuOpen] = useState(false);
+  const showBecomeWorkerLink =
+    user?.role === "customer" && !isWorker && (user?.workerProfile?.status === "rejected" || !user?.workerProfile);
 
   const handleLogout = () => {
     logout();
+    setMenuOpen(false);
     router.push("/");
   };
+
+  const closeMenu = () => setMenuOpen(false);
 
   return (
     <header className="sticky top-0 z-20">
@@ -33,7 +40,7 @@ export default function Navbar() {
             />
           </Link>
 
-          <nav className="flex items-center gap-5 text-sm">
+          <nav className="hidden items-center gap-5 text-sm md:flex">
             <Link
               href="/workers"
               className="relative text-slate-600 hover:text-[#101B2B] transition-colors group hidden sm:inline-block"
@@ -78,6 +85,13 @@ export default function Navbar() {
                   My bookings
                   <span className="absolute left-0 -bottom-1 w-0 h-[1.5px] bg-[#E8A33D] transition-all duration-300 group-hover:w-full" />
                 </Link>
+                <Link
+                  href="/profile"
+                  className="relative text-slate-600 hover:text-[#101B2B] transition-colors group hidden md:inline-block"
+                >
+                  Profile
+                  <span className="absolute left-0 -bottom-1 w-0 h-[1.5px] bg-[#E8A33D] transition-all duration-300 group-hover:w-full" />
+                </Link>
 
                 {isWorker && (
                   <Link
@@ -93,12 +107,12 @@ export default function Navbar() {
                     Worker: pending
                   </span>
                 )}
-                {!user.roles?.includes("WORKER") && (
+                {showBecomeWorkerLink && (
                   <Link
                     href="/become-worker"
                     className="relative text-slate-600 hover:text-[#101B2B] transition-colors group hidden md:inline-block"
                   >
-                    Become a worker
+                    {user?.workerProfile?.status === "rejected" ? "Apply again" : "Become a worker"}
                     <span className="absolute left-0 -bottom-1 w-0 h-[1.5px] bg-[#E8A33D] transition-all duration-300 group-hover:w-full" />
                   </Link>
                 )}
@@ -125,7 +139,45 @@ export default function Navbar() {
               </>
             )}
           </nav>
+
+          <button
+            type="button"
+            onClick={() => setMenuOpen((open) => !open)}
+            className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 text-[#101B2B] md:hidden"
+            aria-expanded={menuOpen}
+            aria-controls="mobile-navigation"
+            aria-label={menuOpen ? "Close navigation menu" : "Open navigation menu"}
+          >
+            <span className="text-xl leading-none">{menuOpen ? "×" : "☰"}</span>
+          </button>
         </div>
+
+        {menuOpen && (
+          <div id="mobile-navigation" className="border-t border-slate-200 bg-white px-4 pb-4 pt-3 md:hidden">
+            <nav className="flex flex-col gap-1 text-sm" aria-label="Mobile navigation">
+              <Link onClick={closeMenu} href="/workers" className="rounded-xl px-3 py-3 font-medium text-slate-700 hover:bg-[#F7F5F0]">Find workers</Link>
+              <Link onClick={closeMenu} href="/how-it-works" className="rounded-xl px-3 py-3 font-medium text-slate-700 hover:bg-[#F7F5F0]">How it works</Link>
+              {!loading && !user && (
+                <>
+                  <Link onClick={closeMenu} href="/login" className="rounded-xl px-3 py-3 font-medium text-slate-700 hover:bg-[#F7F5F0]">Login</Link>
+                  <Link onClick={closeMenu} href="/register" className="mt-1 rounded-xl bg-[#101B2B] px-3 py-3 text-center font-medium text-white">Create an account</Link>
+                </>
+              )}
+              {!loading && user && (
+                <>
+                  <Link onClick={closeMenu} href="/dashboard" className="rounded-xl px-3 py-3 font-medium text-slate-700 hover:bg-[#F7F5F0]">My bookings</Link>
+                  <Link onClick={closeMenu} href="/profile" className="rounded-xl px-3 py-3 font-medium text-slate-700 hover:bg-[#F7F5F0]">Profile</Link>
+                  {isWorker && <Link onClick={closeMenu} href="/worker/dashboard" className="rounded-xl px-3 py-3 font-medium text-slate-700 hover:bg-[#F7F5F0]">Worker dashboard</Link>}
+                  {showBecomeWorkerLink && <Link onClick={closeMenu} href="/become-worker" className="rounded-xl px-3 py-3 font-medium text-slate-700 hover:bg-[#F7F5F0]">{user?.workerProfile?.status === "rejected" ? "Apply again" : "Become a worker"}</Link>}
+                  {isAdmin && <Link onClick={closeMenu} href="/admin" className="rounded-xl px-3 py-3 font-medium text-slate-700 hover:bg-[#F7F5F0]">Admin</Link>}
+                  <div className="my-1 border-t border-slate-100" />
+                  <p className="px-3 py-2 text-xs text-slate-500">Signed in as <span className="font-semibold text-[#101B2B]">{user.name}</span></p>
+                  <button onClick={handleLogout} className="rounded-xl px-3 py-3 text-left font-medium text-slate-700 hover:bg-[#F7F5F0]">Log out</button>
+                </>
+              )}
+            </nav>
+          </div>
+        )}
       </div>
     </header>
   );

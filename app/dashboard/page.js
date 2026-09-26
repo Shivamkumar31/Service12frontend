@@ -8,6 +8,7 @@ import { useAuth } from "../../lib/auth-context";
 import RequireAuth from "../../components/RequireAuth";
 import BookingCard from "../../components/BookingCard";
 import ErrorText from "../../components/ErrorText";
+import Icon from "../../components/Icon";
 
 function Dashboard() {
   const { user, refresh } = useAuth();
@@ -30,14 +31,15 @@ function Dashboard() {
 
   useEffect(load, []);
 
-  const handleAction = async (bookingId, status) => {
+  const handleAction = async (bookingId, status, reason) => {
     try {
-      if (status === "CANCELLED") {
-        await api.cancelBooking(bookingId);
+      if (status === "cancelled") {
+        await api.cancelBooking(bookingId, reason);
       }
-      load();
+      await load();
     } catch (err) {
       setError(err.message);
+      throw err;
     }
   };
 
@@ -74,8 +76,11 @@ function Dashboard() {
   return (
     <div className="bg-[#F7F5F0] min-h-screen">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-10">
-        <div className="flex flex-wrap items-start justify-between gap-4 mb-2">
+        <div className="flex flex-col gap-4 mb-2 sm:flex-row sm:items-start sm:justify-between">
           <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#2E6E8E]">
+              Customer dashboard
+            </p>
             <h1 className="font-display text-3xl text-[#101B2B] tracking-tight">
               My bookings
             </h1>
@@ -89,7 +94,7 @@ function Dashboard() {
             whileTap={{ scale: locating ? 1 : 0.97 }}
             onClick={updateLocation}
             disabled={locating}
-            className="inline-flex items-center gap-1.5 text-sm font-medium border border-slate-200 bg-white px-4 py-2.5 rounded-xl hover:border-[#2E6E8E] hover:text-[#2E6E8E] transition-colors disabled:opacity-60"
+            className="inline-flex w-full items-center justify-center gap-1.5 text-sm font-medium border border-slate-200 bg-white px-4 py-2.5 rounded-xl hover:border-[#2E6E8E] hover:text-[#2E6E8E] transition-colors disabled:opacity-60 sm:w-auto"
           >
             {locating ? (
               <>
@@ -97,10 +102,26 @@ function Dashboard() {
                 Detecting...
               </>
             ) : (
-              <>📍 Update saved location</>
+              <><Icon name="pin" size={16} /> Update saved location</>
             )}
           </motion.button>
         </div>
+
+        {!loading && bookings.length > 0 && (
+          <div className="mb-7 mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
+            {[
+              ["All requests", bookings.length, "bg-white"],
+              ["Pending", bookings.filter((b) => String(b.status || "").toLowerCase() === "pending").length, "bg-[#FFF5E5]"],
+              ["Upcoming", bookings.filter((b) => ["accepted", "in_progress"].includes(String(b.status || "").toLowerCase())).length, "bg-[#EAF3F7]"],
+              ["Completed", bookings.filter((b) => String(b.status || "").toLowerCase() === "completed").length, "bg-[#E9F5EE]"],
+            ].map(([label, value, background]) => (
+              <div key={label} className={`rounded-2xl border border-slate-200 px-4 py-3 shadow-sm ${background}`}>
+                <p className="text-2xl font-semibold text-[#101B2B]">{value}</p>
+                <p className="mt-0.5 text-xs font-medium text-slate-500">{label}</p>
+              </div>
+            ))}
+          </div>
+        )}
 
         <div className="mb-6">
           <ErrorText>{locError}</ErrorText>
@@ -129,7 +150,7 @@ function Dashboard() {
             animate={{ opacity: 1, y: 0 }}
             className="rounded-2xl ticket-border bg-white p-10 text-center mt-4"
           >
-            <span className="text-3xl">📋</span>
+            <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-[#EAF3F7] text-[#2E6E8E]"><Icon name="list" size={24} /></span>
             <p className="text-slate-600 font-medium mt-3">No bookings yet</p>
             <p className="text-slate-500 text-sm mt-1">
               Go find a worker to book your first service.
@@ -139,7 +160,17 @@ function Dashboard() {
             </Link>
           </motion.div>
         ) : (
-          <div className="grid sm:grid-cols-2 gap-4 mt-4">
+          <>
+          <div className="mb-3 mt-8 flex items-end justify-between">
+            <div>
+              <h2 className="font-display text-xl text-[#101B2B]">Your service requests</h2>
+              <p className="mt-1 text-sm text-slate-500">Track appointments and stay updated.</p>
+            </div>
+            <span className="hidden text-xs font-semibold uppercase tracking-wide text-slate-400 sm:block">
+              {bookings.length} total
+            </span>
+          </div>
+          <div className="grid gap-4 sm:grid-cols-2">
             <AnimatePresence>
               {bookings.map((b, i) => (
                 <motion.div
@@ -153,6 +184,7 @@ function Dashboard() {
               ))}
             </AnimatePresence>
           </div>
+          </>
         )}
       </div>
     </div>

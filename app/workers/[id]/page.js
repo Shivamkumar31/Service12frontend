@@ -8,6 +8,7 @@ import { useAuth } from "../../../lib/auth-context";
 import DummyAvatar from "../../../components/DummyAvatar";
 import ErrorText from "../../../components/ErrorText";
 import SiteFooter from "../../../components/SiteFooter";
+import Icon from "../../../components/Icon";
 
 export default function WorkerProfilePage() {
   const { id } = useParams();
@@ -22,15 +23,32 @@ export default function WorkerProfilePage() {
   const [booking, setBooking] = useState(false);
   const [bookError, setBookError] = useState("");
   const [bookingSummary, setBookingSummary] = useState(null);
+  const [isOwnProfile, setIsOwnProfile] = useState(false);
   const today = new Date().toISOString().slice(0, 10);
 
   useEffect(() => {
     api
       .getWorkerById(id)
-      .then((res) => setWorker(res.worker))
+      .then((res) => {
+        const profile = res.workerProfile || res.worker || res.data?.workerProfile;
+        if (!profile) {
+          setWorker(null);
+          return;
+        }
+        const account = profile.userId || {};
+        const currentUserId = user?._id || user?.id;
+        const workerUserId = account._id || account.id;
+        setIsOwnProfile(Boolean(currentUserId && workerUserId && String(currentUserId) === String(workerUserId)));
+        setWorker({
+          ...profile,
+          name: account.name || profile.name || "Service professional",
+          address: profile.address || account.customerProfile?.address || "",
+          workerProfile: profile,
+        });
+      })
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false));
-  }, [id]);
+  }, [id, user]);
 
   const submitBooking = async (e) => {
     e.preventDefault();
@@ -38,6 +56,10 @@ export default function WorkerProfilePage() {
 
     if (!user) {
       router.push(`/login?returnTo=${encodeURIComponent(`/workers/${id}`)}`);
+      return;
+    }
+    if (isOwnProfile) {
+      setBookError("You cannot book your own worker profile.");
       return;
     }
 
@@ -59,7 +81,10 @@ export default function WorkerProfilePage() {
       await api.createBooking({ workerId: id, ...form });
       setBookingSummary({
         workerName: worker.name,
-        serviceName: worker.workerProfile?.category?.name || "Local service",
+        serviceName:
+          worker.workerProfile?.serviceCategory?.name ||
+          worker.workerProfile?.category?.name ||
+          "Local service",
         serviceDate: form.serviceDate,
         serviceTime: form.serviceTime,
         address: worker.address,
@@ -87,6 +112,19 @@ export default function WorkerProfilePage() {
     );
   }
   if (!worker) return null;
+  if (isOwnProfile) {
+    return (
+      <div className="min-h-screen bg-[#F7F5F0] px-4 py-16">
+        <div className="mx-auto max-w-xl rounded-2xl bg-white p-8 text-center ticket-border">
+          <h1 className="font-display text-2xl text-[#101B2B]">Your worker profile</h1>
+          <p className="mt-2 text-sm text-slate-500">You cannot create a booking for your own profile.</p>
+          <button type="button" onClick={() => router.push("/worker/dashboard")} className="btn-primary mt-5">
+            Go to worker dashboard
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   if (bookingSummary) {
     return (
@@ -160,7 +198,8 @@ export default function WorkerProfilePage() {
     );
   }
 
-  const wp = worker.workerProfile || {};
+  const wp = worker.workerProfile || worker;
+  const category = wp.serviceCategory || wp.category;
   // presentational only — reads whichever pricing field your API returns, no logic added
   const hourlyRate = wp.hourlyRate ?? wp.pricePerHour ?? wp.rate ?? null;
 
@@ -177,39 +216,45 @@ export default function WorkerProfilePage() {
             className="md:col-span-2 rounded-2xl bg-white ticket-border shadow-sm overflow-hidden"
           >
             {/* cover strip */}
-            <div className="h-24 bg-gradient-to-r from-[#101B2B] via-[#1c2f47] to-[#2E6E8E] relative">
+            <div className="h-32 bg-gradient-to-r from-[#101B2B] via-[#1c2f47] to-[#2E6E8E] relative">
               <div className="absolute inset-0 bg-blueprint opacity-20" />
+              <div className="absolute right-6 top-5 rounded-full border border-white/20 bg-white/10 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-white/80 backdrop-blur-sm">
+                Local professional
+              </div>
             </div>
 
             <div className="px-6 sm:px-8 pb-8">
-              <div className="flex flex-wrap gap-5 -mt-10">
-                <div className="ring-4 ring-white rounded-full shrink-0">
+              <div className="flex flex-wrap items-end gap-5 -mt-16">
+                <div className="relative ring-4 ring-white rounded-2xl shrink-0 bg-[#F7F5F0] shadow-lg">
                   {wp.photoUrl ? (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img
                       src={wp.photoUrl}
-                      alt={`${worker.name} - ${wp.category?.name || "local service professional"}`}
-                      className="w-24 h-24 rounded-full object-cover"
+                      alt={`${worker.name} - ${category?.name || "local service professional"}`}
+                      className="w-32 h-32 rounded-2xl object-cover"
                     />
                   ) : (
-                    <DummyAvatar name={worker.name} size={96} />
+                    <DummyAvatar name={worker.name} size={128} className="rounded-2xl" />
                   )}
+                  <span className="absolute -right-2 -bottom-2 flex h-8 w-8 items-center justify-center rounded-full border-4 border-white bg-[#3F7D5C] text-sm text-white shadow-sm" aria-label="Verified professional">
+                    ✓
+                  </span>
                 </div>
 
-                <div className="pt-11 flex-1 min-w-[200px]">
+                <div className="pb-1 flex-1 min-w-[200px]">
                   <div className="flex flex-wrap items-center gap-2">
-                    <h1 className="font-display text-2xl text-[#101B2B] tracking-tight">
+                    <h1 className="font-display text-2xl sm:text-3xl text-[#101B2B] tracking-tight">
                       {worker.name}
                     </h1>
-                    <span className="text-[10px] font-semibold uppercase tracking-wide bg-[#E9F5EE] text-[#3F7D5C] px-2 py-1 rounded-full border border-[#3F7D5C]/20">
-                      ✅ Verified
+                    <span className="text-[10px] font-semibold uppercase tracking-wide bg-[#E9F5EE] text-[#3F7D5C] px-2.5 py-1 rounded-full border border-[#3F7D5C]/20">
+                      Verified
                     </span>
                   </div>
-                  <p className="text-slate-500 text-sm mt-0.5">{wp.category?.name}</p>
+                  <p className="text-slate-500 text-sm mt-1">{category?.name || "Service professional"}</p>
                 </div>
 
                 {hourlyRate && (
-                  <div className="pt-11 text-right ml-auto">
+                  <div className="pb-1 text-right ml-auto">
                     <div className="font-display text-2xl text-[#101B2B]">
                       ₹{hourlyRate}
                       <span className="text-sm font-normal text-slate-400">/hr</span>
@@ -223,7 +268,7 @@ export default function WorkerProfilePage() {
               <div className="grid grid-cols-3 gap-3 mt-6">
                 <div className="rounded-xl bg-[#F7F5F0] border border-slate-200 px-4 py-3 text-center">
                   <div className="font-display text-lg text-[#101B2B]">
-                    ⭐ {wp.rating || "—"}
+                    <span className="inline-flex items-center gap-1"><Icon name="star" size={17} className="text-[#E8A33D]" /> {wp.rating || "—"}</span>
                   </div>
                   <div className="text-[11px] text-slate-500 mt-0.5">Rating</div>
                 </div>
@@ -235,7 +280,7 @@ export default function WorkerProfilePage() {
                 </div>
                 <div className="rounded-xl bg-[#F7F5F0] border border-slate-200 px-4 py-3 text-center">
                   <div className="font-display text-lg text-[#101B2B]">
-                    {wp.experience || 0}
+                    {wp.experienceYears ?? wp.experience ?? 0}
                     <span className="text-xs font-normal">yr</span>
                   </div>
                   <div className="text-[11px] text-slate-500 mt-0.5">Experience</div>
@@ -243,7 +288,7 @@ export default function WorkerProfilePage() {
               </div>
 
               <div className="mt-5 flex items-center gap-1.5 text-sm text-slate-500">
-                <span>📍</span>
+                <Icon name="pin" size={16} className="text-[#2E6E8E]" />
                 {worker.address}
               </div>
 
