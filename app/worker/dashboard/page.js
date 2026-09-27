@@ -45,7 +45,9 @@ function WorkerDashboard() {
         await api.acceptWorkerBooking(bookingId);
       } else if (normalizedAction === "reject" || normalizedAction === "rejected") {
         await api.rejectWorkerBooking(bookingId);
-      } else if (normalizedAction === "complete" || normalizedAction === "completed" || normalizedAction === "in_progress") {
+      } else if (normalizedAction === "in_progress") {
+        await api.updateBookingStatus(bookingId, "in_progress");
+      } else if (normalizedAction === "complete" || normalizedAction === "completed") {
         await api.completeWorkerBooking(bookingId);
       }
       await load();
@@ -335,7 +337,11 @@ function WorkerDashboard() {
                 Update your public profile — customers see this when they book you.
               </p>
 
-              <form onSubmit={saveProfile} className="space-y-4">
+              <p className="text-sm text-amber-800 bg-amber-50 border border-amber-200 rounded-xl px-3.5 py-2.5 mb-6">
+                Profile editing will be available once the worker-profile update endpoint is connected.
+              </p>
+              <form className="space-y-4">
+                <fieldset disabled className="space-y-4 opacity-60">
                 <div className="flex items-center gap-4">
                   {settingsPreview ? (
                     // eslint-disable-next-line @next/next/no-img-element
@@ -404,6 +410,7 @@ function WorkerDashboard() {
                   />
                 </div>
 
+                </fieldset>
                 <ErrorText>{settingsError}</ErrorText>
                 {settingsSuccess && (
                   <motion.p
@@ -418,14 +425,14 @@ function WorkerDashboard() {
                 <motion.button
                   whileHover={{ scale: savingSettings ? 1 : 1.01 }}
                   whileTap={{ scale: savingSettings ? 1 : 0.98 }}
-                  type="submit"
-                  disabled={savingSettings}
+                  type="button"
+                  disabled
                   className="w-full inline-flex items-center justify-center gap-2 bg-[#101B2B] text-white font-medium py-3 rounded-xl hover:bg-[#1c2f47] transition-colors disabled:opacity-60 shadow-sm"
                 >
                   {savingSettings && (
                     <span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                   )}
-                  {savingSettings ? "Saving..." : "Save changes"}
+                  Profile editing unavailable
                 </motion.button>
               </form>
             </motion.div>

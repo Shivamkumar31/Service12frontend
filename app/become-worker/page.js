@@ -39,6 +39,12 @@ function BecomeWorkerForm() {
 
   const detectLocation = () => {
     setLocating(true);
+    setError("");
+    if (!navigator.geolocation) {
+      setError("Location is required to verify your service area. Try a browser that supports location access.");
+      setLocating(false);
+      return;
+    }
     navigator.geolocation.getCurrentPosition(
       (pos) => {
         setCoords({ lat: pos.coords.latitude, lng: pos.coords.longitude });

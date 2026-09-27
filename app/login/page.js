@@ -109,11 +109,11 @@ function LoginForm() {
 
         <p className="text-sm text-slate-500 mt-5 text-center">
           No account?{" "}
-          <Link href="/register" className="text-[#101B2B] font-semibold hover:text-[#E8A33D] transition-colors">
+          <Link href={searchParams.get("returnTo") ? `/register?returnTo=${encodeURIComponent(searchParams.get("returnTo"))}` : "/register"} className="text-[#101B2B] font-semibold hover:text-[#E8A33D] transition-colors">
             Sign up
           </Link>{" "}
           or{" "}
-          <Link href="/otp-login" className="text-[#101B2B] font-semibold hover:text-[#E8A33D] transition-colors">
+          <Link href={searchParams.get("returnTo") ? `/otp-login?returnTo=${encodeURIComponent(searchParams.get("returnTo"))}` : "/otp-login"} className="text-[#101B2B] font-semibold hover:text-[#E8A33D] transition-colors">
             use phone OTP
           </Link>
           .

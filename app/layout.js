@@ -10,7 +10,7 @@ export const metadata = {
   metadataBase: new URL(SITE_URL),
 
   title: {
-    default: "Getworkfy - Book Verified Local Workers Near You",
+    default: "Getworkfy | Find Local Service Professionals Near You",
     template: "%s | Getworkfy",
   },
 
@@ -67,15 +67,15 @@ export const metadata = {
     locale: "en_IN",
     url: SITE_URL,
     siteName: "Getworkfy",
-    title: "Getworkfy - Book Verified Local Workers Near You",
+    title: "Getworkfy | Find Local Service Professionals Near You",
     description:
       "Find and book trusted local workers near you. Discover verified plumbers, electricians, tutors, carpenters and more with Getworkfy.",
 
     images: [
       {
-        url: "/getworkfy-logo.png",
-        width: 1200,
-        height: 600,
+        url: "/og-image.png",
+        width: 1730,
+        height: 909,
         alt: "Getworkfy - Local Services Near You",
       },
     ],
@@ -83,10 +83,10 @@ export const metadata = {
 
   twitter: {
     card: "summary_large_image",
-    title: "Getworkfy - Book Verified Local Workers Near You",
+    title: "Getworkfy | Find Local Service Professionals Near You",
     description:
       "Find and book trusted local workers near you with Getworkfy.",
-    images: ["/getworkfy-logo.png"],
+    images: ["/og-image.png"],
   },
 
   // YOUR LOCAL WEBSITE FAVICON
@@ -112,6 +112,7 @@ const websiteSchema = {
   "@context": "https://schema.org",
   "@type": "WebSite",
   name: "Getworkfy",
+  alternateName: "getworkfy.in",
   url: SITE_URL,
   description:
     "Find and book verified local workers and service providers near you.",

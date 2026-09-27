@@ -1,6 +1,6 @@
 import StaticPageLayout from "../../components/StaticPageLayout";
 
-export const metadata = { title: "About Getworkfy", description: "Learn how Getworkfy helps people find verified local workers.", alternates: { canonical: "/about" } };
+export const metadata = { title: { absolute: "About Getworkfy | Local Service Professionals" }, description: "Learn how Getworkfy helps people find local service professionals.", alternates: { canonical: "https://www.getworkfy.in/about" } };
 
 export default function AboutPage() {
   return (
@@ -21,6 +21,11 @@ export default function AboutPage() {
         <li>Transparent pricing — no hidden call-out fees.</li>
         <li>Local first — we prioritize workers near you, not the ones who pay the most.</li>
       </ul>
+      <h2>About the founder</h2>
+      <p id="founder">
+        Getworkfy was founded by Shivam Kumar, a computer science student building a simpler way
+        for people to discover local service professionals.
+      </p>
       <h2>Where we're headed</h2>
       <p>
         We're growing city by city, category by category — always with the same goal: make it

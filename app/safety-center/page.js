@@ -1,6 +1,6 @@
 import StaticPageLayout from "../../components/StaticPageLayout";
 
-export const metadata = { title: "Safety center", description: "Learn how Getworkfy helps keep local service bookings safe.", alternates: { canonical: "/safety-center" } };
+export const metadata = { title: "Safety Center", description: "Learn how Getworkfy helps keep local service bookings safe.", alternates: { canonical: "https://www.getworkfy.in/safety-center" } };
 
 export default function SafetyCenterPage() {
   return (

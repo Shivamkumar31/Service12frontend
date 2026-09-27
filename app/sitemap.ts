@@ -19,14 +19,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { path: "/workers", changeFrequency: "daily" as const, priority: 0.9 },
     { path: "/how-it-works", changeFrequency: "monthly" as const, priority: 0.8 },
     { path: "/about", changeFrequency: "monthly" as const, priority: 0.7 },
+    { path: "/careers", changeFrequency: "monthly" as const, priority: 0.5 },
     { path: "/blog", changeFrequency: "weekly" as const, priority: 0.6 },
     { path: "/contact-us", changeFrequency: "monthly" as const, priority: 0.5 },
+    { path: "/investors", changeFrequency: "monthly" as const, priority: 0.4 },
+    { path: "/press", changeFrequency: "monthly" as const, priority: 0.4 },
     { path: "/help", changeFrequency: "monthly" as const, priority: 0.5 },
     { path: "/privacy", changeFrequency: "yearly" as const, priority: 0.3 },
     { path: "/terms", changeFrequency: "yearly" as const, priority: 0.3 },
     { path: "/cookies", changeFrequency: "yearly" as const, priority: 0.3 },
     { path: "/safety-center", changeFrequency: "monthly" as const, priority: 0.5 },
     { path: "/verification-process", changeFrequency: "monthly" as const, priority: 0.5 },
+    { path: "/worker-resources", changeFrequency: "monthly" as const, priority: 0.4 },
   ];
 
   const entries = publicRoutes.map(({ path, changeFrequency, priority }) => ({

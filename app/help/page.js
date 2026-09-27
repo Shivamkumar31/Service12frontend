@@ -1,6 +1,6 @@
 import StaticPageLayout from "../../components/StaticPageLayout";
 
-export const metadata = { title: "Help and support", description: "Get help using Getworkfy.", alternates: { canonical: "/help" } };
+export const metadata = { title: "Help & Support", description: "Get help using Getworkfy.", alternates: { canonical: "https://www.getworkfy.in/help" } };
 
 const FAQS = [
   { q: "How do I cancel a booking?", a: "Go to My bookings from your dashboard and cancel from there." },

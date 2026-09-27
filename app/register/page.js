@@ -122,11 +122,11 @@ function RegisterForm() {
 
         <p className="text-sm text-slate-500 mt-5 text-center">
           Already have an account?{" "}
-          <Link href="/login" className="text-[#101B2B] font-semibold hover:text-[#E8A33D] transition-colors">
+          <Link href={searchParams.get("returnTo") ? `/login?returnTo=${encodeURIComponent(searchParams.get("returnTo"))}` : "/login"} className="text-[#101B2B] font-semibold hover:text-[#E8A33D] transition-colors">
             Log in
           </Link>{" "}
           or{" "}
-          <Link href="/otp-login" className="text-[#101B2B] font-semibold hover:text-[#E8A33D] transition-colors">
+          <Link href={searchParams.get("returnTo") ? `/otp-login?returnTo=${encodeURIComponent(searchParams.get("returnTo"))}` : "/otp-login"} className="text-[#101B2B] font-semibold hover:text-[#E8A33D] transition-colors">
             use phone OTP
           </Link>
           .

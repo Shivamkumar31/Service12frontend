@@ -31,7 +31,7 @@ export default function SiteFooter() {
           <div>
             <h2 className="text-xs font-semibold uppercase tracking-widest text-slate-500 mb-4">Contact</h2>
             <Link href="/contact-us" className="text-sm text-slate-300 hover:text-[#E8A33D] transition-colors">Contact us</Link>
-            <Link href="/about-me" className="block mt-2.5 text-sm text-slate-300 hover:text-[#E8A33D] transition-colors">About the founder</Link>
+            <Link href="/about#founder" className="block mt-2.5 text-sm text-slate-300 hover:text-[#E8A33D] transition-colors">About the founder</Link>
             <Link href="/investors" className="block mt-2.5 text-sm text-slate-300 hover:text-[#E8A33D] transition-colors">Investor relations</Link>
             <a
               href="mailto:shivamkumaryaadav04@gmail.com"
