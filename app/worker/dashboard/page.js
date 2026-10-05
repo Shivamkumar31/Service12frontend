@@ -9,6 +9,7 @@ import RequireAuth from "../../../components/RequireAuth";
 import BookingCard from "../../../components/BookingCard";
 import ErrorText from "../../../components/ErrorText";
 import Icon from "../../../components/Icon";
+import LoadingSpinner from "../../../components/LoadingSpinner";
 
 function WorkerDashboard() {
   const router = useRouter();
@@ -288,10 +289,13 @@ function WorkerDashboard() {
               <h2 className="font-display text-xl text-[#101B2B] mb-4">Booking requests</h2>
 
               {loading ? (
-                <div className="grid sm:grid-cols-2 gap-4">
-                  {Array.from({ length: 4 }).map((_, i) => (
-                    <div key={i} className="rounded-2xl ticket-border h-32 animate-shimmer" />
-                  ))}
+                <div>
+                  <LoadingSpinner label="Loading booking requests..." className="mb-4" />
+                  <div className="grid sm:grid-cols-2 gap-4">
+                    {Array.from({ length: 4 }).map((_, i) => (
+                      <div key={i} className="rounded-2xl ticket-border h-32 animate-shimmer" />
+                    ))}
+                  </div>
                 </div>
               ) : bookings.length === 0 ? (
                 <motion.div

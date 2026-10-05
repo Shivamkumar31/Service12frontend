@@ -7,23 +7,49 @@ import { api } from "../../lib/api";
 import RequireAuth from "../../components/RequireAuth";
 import DummyAvatar from "../../components/DummyAvatar";
 import ErrorText from "../../components/ErrorText";
+import LoadingSpinner from "../../components/LoadingSpinner";
 
 function AdminPanel() {
   const [workers, setWorkers] = useState([]);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
   const [busyId, setBusyId] = useState(null);
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [searchTerm, setSearchTerm] = useState("");
 
-  const load = () => {
+  const load = async () => {
     setLoading(true);
-    api
-      .getWorkerApplications()
-      .then((res) => setWorkers(res.workerProfiles || res.data?.workerProfiles || []))
-      .catch((err) => setError(err.message))
-      .finally(() => setLoading(false));
+    setError("");
+    try {
+      const res = await api.getWorkerApplications();
+      setWorkers(res.workerProfiles || res.data?.workerProfiles || []);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  useEffect(load, []);
+  useEffect(() => {
+    load();
+  }, []);
+
+  const suspendAccount = async (id, workerId) => {
+    if (!id) {
+      setError("This application does not include a user id.");
+      return;
+    }
+    setBusyId(workerId);
+    setError("");
+    try {
+      await api.suspendUser(id);
+      await load();
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setBusyId(null);
+    }
+  };
 
   const review = async (id, action) => {
     setBusyId(id);
@@ -36,36 +62,45 @@ function AdminPanel() {
         activated: () => api.activateWorker(id),
       };
 
-      const suspendAccount = async (id) => {
-        if (!id) {
-          setError("This application does not include a user id.");
-          return;
-        }
-        setBusyId(id);
-        setError("");
-        try {
-          await api.suspendUser(id);
-          load();
-        } catch (err) {
-          setError(err.message);
-        } finally {
-          setBusyId(null);
-        }
-      };
-
       const handler = actionMap[action];
       if (!handler) {
         throw new Error("Invalid action");
       }
 
       await handler();
-      load();
+      await load();
     } catch (err) {
       setError(err.message);
     } finally {
       setBusyId(null);
     }
   };
+
+  const counts = workers.reduce(
+    (totals, worker) => {
+      const status = String((worker.workerProfile || worker).status || "pending").toLowerCase();
+      totals[status] = (totals[status] || 0) + 1;
+      return totals;
+    },
+    { all: workers.length }
+  );
+  const filteredWorkers = workers.filter((worker) => {
+    const profile = worker.workerProfile || worker;
+    const account = worker.userId || worker;
+    const status = String(profile.status || "pending").toLowerCase();
+    const query = searchTerm.trim().toLowerCase();
+    const searchable = [
+      account.name,
+      account.email,
+      account.phone,
+      profile.address,
+      (profile.serviceCategory || profile.category)?.name,
+    ]
+      .filter(Boolean)
+      .join(" ")
+      .toLowerCase();
+    return (statusFilter === "all" || status === statusFilter) && searchable.includes(query);
+  });
 
   return (
     <div className="bg-[#F7F5F0] min-h-screen">
@@ -76,35 +111,92 @@ function AdminPanel() {
             Admin
           </span>
           <h1 className="font-display text-3xl text-[#101B2B] tracking-tight mt-3">
-            Worker applications
+            Worker management
           </h1>
           <p className="text-sm text-slate-500 mt-1">
-            {workers.length} worker application{workers.length === 1 ? "" : "s"} in the review queue.
+            Review application statuses and manage worker account access.
           </p>
         </div>
 
         <ErrorText>{error}</ErrorText>
 
+        <section aria-label="Worker application status totals" className="grid grid-cols-2 gap-3 sm:grid-cols-5 mt-5">
+          {["all", "pending", "approved", "rejected", "suspended"].map((status) => (
+            <button
+              key={status}
+              type="button"
+              onClick={() => setStatusFilter(status)}
+              aria-pressed={statusFilter === status}
+              className={`rounded-xl border bg-white p-3 text-left transition-colors ${
+                statusFilter === status
+                  ? "border-[#2E6E8E] ring-2 ring-[#2E6E8E]/20"
+                  : "border-slate-200 hover:border-slate-300"
+              }`}
+            >
+              <span className="block text-xs font-medium capitalize text-slate-500">
+                {status === "all" ? "All workers" : status}
+              </span>
+              <span className="mt-1 block text-xl font-semibold text-[#101B2B]">
+                {counts[status] || 0}
+              </span>
+            </button>
+          ))}
+        </section>
+
+        <div className="mt-4 flex flex-col gap-3 sm:flex-row">
+          <label className="sr-only" htmlFor="worker-search">Search workers</label>
+          <input
+            id="worker-search"
+            type="search"
+            value={searchTerm}
+            onChange={(event) => setSearchTerm(event.target.value)}
+            placeholder="Search by name, email, phone, address, or service"
+            className="input flex-1"
+          />
+          <label className="sr-only" htmlFor="worker-status-filter">Filter workers by status</label>
+          <select
+            id="worker-status-filter"
+            value={statusFilter}
+            onChange={(event) => setStatusFilter(event.target.value)}
+            className="input sm:max-w-48"
+          >
+            <option value="all">All statuses</option>
+            <option value="pending">Pending</option>
+            <option value="approved">Approved</option>
+            <option value="rejected">Rejected</option>
+            <option value="suspended">Suspended</option>
+          </select>
+        </div>
+
         {loading ? (
-          <div className="space-y-3 mt-4">
-            {Array.from({ length: 3 }).map((_, i) => (
-              <div key={i} className="rounded-2xl ticket-border h-24 animate-shimmer" />
-            ))}
+          <div className="mt-4">
+            <LoadingSpinner label="Loading workers..." className="mb-4" />
+            <div className="space-y-3">
+              {Array.from({ length: 3 }).map((_, i) => (
+                <div key={i} className="rounded-2xl ticket-border h-24 animate-shimmer" />
+              ))}
+            </div>
           </div>
-        ) : workers.length === 0 ? (
+        ) : filteredWorkers.length === 0 ? (
           <motion.div
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             className="rounded-2xl ticket-border bg-white p-10 text-center mt-4"
           >
             <span className="text-3xl">✅</span>
-            <p className="text-slate-600 font-medium mt-3">All caught up</p>
-            <p className="text-slate-500 text-sm mt-1">No worker applications need review right now.</p>
+            <p className="text-slate-600 font-medium mt-3">
+              {workers.length === 0 ? "No worker applications found" : "No matching workers"}
+            </p>
+            <p className="text-slate-500 text-sm mt-1">
+              {workers.length === 0
+                ? "Worker applications will appear here when submitted."
+                : "Try a different search or status filter."}
+            </p>
           </motion.div>
         ) : (
           <div className="space-y-3 mt-4">
             <AnimatePresence>
-              {workers.map((w, i) => {
+              {filteredWorkers.map((w, i) => {
                 const wp = w.workerProfile || w;
                 const account = w.userId || w;
                 const category = wp.serviceCategory || wp.category;
@@ -193,7 +285,7 @@ function AdminPanel() {
                         <motion.button
                           whileHover={{ scale: isBusy ? 1 : 1.03 }}
                           whileTap={{ scale: isBusy ? 1 : 0.97 }}
-                          onClick={() => suspendAccount(account._id || account.id)}
+                          onClick={() => suspendAccount(account._id || account.id, w._id)}
                           disabled={isBusy}
                           className="text-sm font-medium px-4 py-2 rounded-xl border border-slate-300 text-slate-600 hover:bg-slate-50 transition-colors disabled:opacity-60"
                         >

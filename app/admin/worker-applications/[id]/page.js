@@ -6,10 +6,12 @@ import { useParams } from "next/navigation";
 import { api } from "../../../../lib/api";
 import RequireAuth from "../../../../components/RequireAuth";
 import ErrorText from "../../../../components/ErrorText";
+import LoadingSpinner from "../../../../components/LoadingSpinner";
 
 function ApplicationDetails() {
   const { id } = useParams();
   const [application, setApplication] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
 
@@ -19,7 +21,8 @@ function ApplicationDetails() {
         const applications = response.workerProfiles || response.data?.workerProfiles || [];
         setApplication(applications.find((item) => item._id === id) || null);
       })
-      .catch((err) => setError(err.message));
+      .catch((err) => setError(err.message))
+      .finally(() => setLoading(false));
   }, [id]);
 
   const review = async (action) => {
@@ -43,9 +46,8 @@ function ApplicationDetails() {
     }
   };
 
-  if (!application) {
-    return <div className="mx-auto max-w-2xl px-4 py-16"><ErrorText>{error || "Loading application..."}</ErrorText></div>;
-  }
+  if (loading) return <div className="mx-auto max-w-2xl px-4 py-16"><LoadingSpinner label="Loading application..." /></div>;
+  if (!application) return <div className="mx-auto max-w-2xl px-4 py-16"><ErrorText>{error || "Application not found."}</ErrorText></div>;
 
   const profile = application.workerProfile || application;
   const account = application.userId || application;

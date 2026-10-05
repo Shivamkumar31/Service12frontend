@@ -7,6 +7,7 @@ import { api } from "../../../lib/api";
 import RequireAuth from "../../../components/RequireAuth";
 import ErrorText from "../../../components/ErrorText";
 import StatusBadge from "../../../components/StatusBadge";
+import LoadingSpinner from "../../../components/LoadingSpinner";
 
 function BookingDetails() {
   const { id } = useParams();
@@ -40,7 +41,7 @@ function BookingDetails() {
     }
   };
 
-  if (loading) return <div className="mx-auto max-w-2xl px-4 py-16 text-sm text-slate-500">Loading booking...</div>;
+  if (loading) return <div className="mx-auto max-w-2xl px-4 py-16"><LoadingSpinner label="Loading booking..." /></div>;
   if (!booking) return <div className="mx-auto max-w-2xl px-4 py-16"><ErrorText>{error || "Booking not found."}</ErrorText></div>;
 
   const status = String(booking.status || "").toLowerCase();

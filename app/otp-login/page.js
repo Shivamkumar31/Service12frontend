@@ -77,6 +77,7 @@ function OtpLoginForm() {
           </div>
           <ErrorText>{error}</ErrorText>
           <button type="submit" className="btn-primary w-full" disabled={loading}>
+            {loading && <span aria-hidden="true" className="mr-2 inline-block h-4 w-4 animate-spin rounded-full border-2 border-current/30 border-t-current motion-reduce:animate-none" />}
             {loading ? "Sending..." : "Send OTP"}
           </button>
         </form>
@@ -99,6 +100,7 @@ function OtpLoginForm() {
           </div>
           <ErrorText>{error}</ErrorText>
           <button type="submit" className="btn-primary w-full" disabled={loading}>
+            {loading && <span aria-hidden="true" className="mr-2 inline-block h-4 w-4 animate-spin rounded-full border-2 border-current/30 border-t-current motion-reduce:animate-none" />}
             {loading ? "Verifying..." : "Verify & continue"}
           </button>
           <button type="button" onClick={() => setStep("phone")} className="btn-secondary w-full text-sm">

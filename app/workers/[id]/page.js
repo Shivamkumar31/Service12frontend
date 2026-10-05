@@ -9,6 +9,7 @@ import DummyAvatar from "../../../components/DummyAvatar";
 import ErrorText from "../../../components/ErrorText";
 import SiteFooter from "../../../components/SiteFooter";
 import Icon from "../../../components/Icon";
+import LoadingSpinner from "../../../components/LoadingSpinner";
 
 export default function WorkerProfilePage() {
   const { id } = useParams();
@@ -100,7 +101,7 @@ export default function WorkerProfilePage() {
   if (loading) {
     return (
       <div className="bg-[#F7F5F0] min-h-screen flex items-center justify-center">
-        <span className="w-6 h-6 border-2 border-slate-300 border-t-[#E8A33D] rounded-full animate-spin" />
+        <LoadingSpinner label="Loading worker profile..." />
       </div>
     );
   }

@@ -6,6 +6,7 @@ import { api } from "../../lib/api";
 import { useAuth } from "../../lib/auth-context";
 import RequireAuth from "../../components/RequireAuth";
 import ErrorText from "../../components/ErrorText";
+import LoadingSpinner from "../../components/LoadingSpinner";
 
 function ProfileForm() {
   const { user, refresh } = useAuth();
@@ -81,7 +82,7 @@ function ProfileForm() {
     );
   };
 
-  if (loading) return <div className="mx-auto max-w-xl px-4 py-16 text-sm text-slate-500">Loading profile...</div>;
+  if (loading) return <div className="mx-auto max-w-xl px-4 py-16"><LoadingSpinner label="Loading profile..." /></div>;
 
   return (
     <div className="min-h-screen bg-[#F7F5F0] px-4 py-10">

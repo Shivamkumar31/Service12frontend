@@ -10,18 +10,46 @@ import { api } from "../../lib/api";
 import WorkerCard from "../../components/WorkerCard";
 import ErrorText from "../../components/ErrorText";
 import Icon from "../../components/Icon";
+import LoadingSpinner from "../../components/LoadingSpinner";
 import { useAuth } from "../../lib/auth-context";
+
+function getCoordinates(value) {
+  const location =
+    value?.location ||
+    value?.data?.location ||
+    value?.user?.location ||
+    value?.data?.user?.location ||
+    value?.profile?.location ||
+    value?.customerProfile?.location;
+  const coordinates = location?.coordinates || value?.coordinates || value?.data?.coordinates;
+
+  if (Array.isArray(coordinates) && coordinates.length >= 2) {
+    const [lng, lat] = coordinates.map(Number);
+    if (Number.isFinite(lat) && Number.isFinite(lng)) {
+      return { lat, lng, accuracy: Number(location?.accuracy) || null };
+    }
+  }
+
+  const point = location || value?.data || value;
+  const lat = Number(point?.lat ?? point?.latitude);
+  const lng = Number(point?.lng ?? point?.longitude);
+  return Number.isFinite(lat) && Number.isFinite(lng)
+    ? { lat, lng, accuracy: Number(point?.accuracy) || null }
+    : null;
+}
 
 function WorkersContent() {
   const searchParams = useSearchParams();
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const [categories, setCategories] = useState([]);
   const [category, setCategory] = useState(searchParams.get("category") || "");
   const [coords, setCoords] = useState(null);
   const [locationAccuracy, setLocationAccuracy] = useState(null);
+  const [locationReady, setLocationReady] = useState(false);
   const [radiusKm, setRadiusKm] = useState(25);
   const [workers, setWorkers] = useState([]);
   const [error, setError] = useState("");
+  const [locationMessage, setLocationMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const [locating, setLocating] = useState(false);
 
@@ -34,23 +62,56 @@ function WorkersContent() {
   }, [searchParams]);
 
   useEffect(() => {
-    try {
-      const saved = sessionStorage.getItem("getworkfy-search-location");
-      if (!saved) return;
-      const parsed = JSON.parse(saved);
-      if (Number.isFinite(parsed.lat) && Number.isFinite(parsed.lng)) {
-        setCoords({ lat: parsed.lat, lng: parsed.lng });
-        setLocationAccuracy(parsed.accuracy || null);
+    let active = true;
+
+    const restoreLocation = async () => {
+      try {
+        const saved = sessionStorage.getItem("getworkfy-search-location");
+        if (saved) {
+          const sessionLocation = getCoordinates(JSON.parse(saved));
+          if (sessionLocation && active) {
+            setCoords(sessionLocation);
+            setLocationAccuracy(sessionLocation.accuracy);
+          }
+        }
+      } catch {
+        sessionStorage.removeItem("getworkfy-search-location");
       }
-    } catch {
-      sessionStorage.removeItem("getworkfy-search-location");
-    }
-  }, []);
+
+      if (authLoading) return;
+
+      if (user) {
+        try {
+          const savedLocation = getCoordinates(await api.getMyLocation());
+          if (savedLocation && active) {
+            setCoords(savedLocation);
+            setLocationAccuracy(savedLocation.accuracy);
+            sessionStorage.setItem(
+              "getworkfy-search-location",
+              JSON.stringify(savedLocation)
+            );
+          }
+        } catch (err) {
+          if (active && err.status !== 404) {
+            setError(`Could not load your saved location: ${err.message}`);
+          }
+        }
+      }
+
+      if (active) setLocationReady(true);
+    };
+
+    setLocationReady(false);
+    restoreLocation();
+    return () => {
+      active = false;
+    };
+  }, [authLoading, user]);
 
   const search = async (searchCoords = coords, requestedRadius = radiusKm) => {
     const radius = Number(requestedRadius);
-    if (!Number.isFinite(radius) || radius < 1 || radius > 100) {
-      setError("Choose a search radius between 1 and 100 km.");
+    if (!Number.isFinite(radius) || radius < 1 || radius > 1000) {
+      setError("Choose a search radius between 1 and 1000 km.");
       return;
     }
     setLoading(true);
@@ -72,7 +133,7 @@ function WorkersContent() {
 
   useEffect(() => {
     const radius = Number(radiusKm);
-    if (!Number.isFinite(radius) || radius < 1 || radius > 100) return undefined;
+    if (!locationReady || !Number.isFinite(radius) || radius < 1 || radius > 1000) return undefined;
 
     const refreshTimer = setTimeout(() => {
       search(coords, radius);
@@ -81,13 +142,18 @@ function WorkersContent() {
     return () => clearTimeout(refreshTimer);
     // Search intentionally runs after the radius/category controls settle.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [radiusKm, category, coords]);
+  }, [radiusKm, category, coords, locationReady]);
 
   const detectLocation = () => {
+    if (!navigator.geolocation) {
+      setError("Location is not supported by this browser.");
+      return;
+    }
     setLocating(true);
     setError("");
+    setLocationMessage("");
     navigator.geolocation.getCurrentPosition(
-      (pos) => {
+      async (pos) => {
         const nextCoords = { lat: pos.coords.latitude, lng: pos.coords.longitude };
         setCoords(nextCoords);
         setLocationAccuracy(pos.coords.accuracy);
@@ -95,6 +161,18 @@ function WorkersContent() {
           "getworkfy-search-location",
           JSON.stringify({ ...nextCoords, accuracy: pos.coords.accuracy })
         );
+        if (user) {
+          try {
+            await api.updateMyLocation(nextCoords);
+            setLocationMessage("Your location is saved to your profile for future bookings.");
+          } catch (err) {
+            setLocationMessage(
+              `Location detected for this search, but could not be saved to your profile: ${err.message}`
+            );
+          }
+        } else {
+          setLocationMessage("Location is set for this search. Sign in to save it for future bookings.");
+        }
         setLocating(false);
       },
       (positionError) => {
@@ -194,22 +272,22 @@ function WorkersContent() {
                   id="radius-range"
                   type="range"
                   min="1"
-                  max="100"
+                  max="1000"
                   step="1"
                   value={radiusKm}
                   onChange={(e) => setRadiusKm(e.target.value)}
                   className="radius-slider w-full"
                   style={{
                     background: `linear-gradient(to right, #e8a33d 0%, #e8a33d ${
-                      ((Number(radiusKm) - 1) / 99) * 100
-                    }%, #dbe3ea ${((Number(radiusKm) - 1) / 99) * 100}%, #dbe3ea 100%)`,
+                      ((Number(radiusKm) - 1) / 999) * 100
+                    }%, #dbe3ea ${((Number(radiusKm) - 1) / 999) * 100}%, #dbe3ea 100%)`,
                   }}
                   aria-label="Search radius in kilometres"
                 />
                 <div className="mt-1 flex justify-between text-[10px] font-medium uppercase tracking-wide text-slate-400">
                   <span>1 km</span>
                   <span>Nearby</span>
-                  <span>100 km</span>
+                  <span>1000 km</span>
                 </div>
               </div>
             </div>
@@ -220,7 +298,7 @@ function WorkersContent() {
                 id="radius-number"
                 type="number"
                 min="1"
-                max="100"
+                max="1000"
                 className="w-20 rounded-xl border border-slate-200 bg-[#F7F5F0] px-3 py-2.5 text-sm text-[#101B2B] focus:outline-none focus:ring-2 focus:ring-[#E8A33D]/50 focus:border-[#E8A33D] transition"
                 value={radiusKm}
                 onChange={(e) => setRadiusKm(e.target.value)}
@@ -274,6 +352,18 @@ function WorkersContent() {
               )}
             </motion.button>
           </div>
+          {locationMessage && (
+            <p
+              role="status"
+              className={`mt-3 text-sm ${
+                locationMessage.startsWith("Location detected for this search, but")
+                  ? "text-amber-700"
+                  : "text-[#3F7D5C]"
+              }`}
+            >
+              {locationMessage}
+            </p>
+          )}
           <p className="text-sm text-slate-500 mt-4 flex items-center gap-2" aria-live="polite">
             {loading && (
               <span className="w-3.5 h-3.5 border-2 border-slate-300 border-t-[#2E6E8E] rounded-full animate-spin" />
@@ -290,10 +380,13 @@ function WorkersContent() {
 
         {/* results */}
         {loading ? (
-          <div className="grid sm:grid-cols-2 gap-4 mt-2">
-            {Array.from({ length: 4 }).map((_, i) => (
-              <div key={i} className="rounded-2xl ticket-border h-32 animate-shimmer" />
-            ))}
+          <div className="mt-2">
+            <LoadingSpinner label="Loading workers..." className="mb-4" />
+            <div className="grid sm:grid-cols-2 gap-4">
+              {Array.from({ length: 4 }).map((_, i) => (
+                <div key={i} className="rounded-2xl ticket-border h-32 animate-shimmer" />
+              ))}
+            </div>
           </div>
         ) : visibleWorkers.length === 0 ? (
           <motion.div

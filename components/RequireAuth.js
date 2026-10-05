@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "../lib/auth-context";
+import LoadingSpinner from "./LoadingSpinner";
 
 // `role` can be "ADMIN" or "WORKER". In the new architecture, a worker is a
 // customer with an approved WorkerProfile, not a separate user role.
@@ -44,7 +45,7 @@ export default function RequireAuth({ children, role }) {
     }
   }, [user, loading, normalizedRole, isAdmin, hasApprovedWorker, router]);
 
-  if (loading || !isAuthorized) return <p className="text-slate-500 text-sm">Loading...</p>;
+  if (loading || !isAuthorized) return <LoadingSpinner label="Checking your account..." className="py-12" />;
 
   return children;
 }

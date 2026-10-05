@@ -5,6 +5,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { api } from "../lib/api";
 import ErrorText from "../components/ErrorText";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 function slugify(text = "") {
   return text.toString().toLowerCase().trim().replace(/[^a-z0-9\s-]/g, "").replace(/\s+/g, "-").replace(/-+/g, "-");
@@ -230,13 +231,16 @@ export default function HomePage() {
         <ErrorText>{error}</ErrorText>
 
         {loading ? (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4">
-            {Array.from({ length: 6 }).map((_, i) => (
-              <div
-                key={i}
-                className="rounded-2xl ticket-border p-5 h-[120px] animate-shimmer"
-              />
-            ))}
+          <div>
+            <LoadingSpinner label="Loading services..." className="mb-4" />
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <div
+                  key={i}
+                  className="rounded-2xl ticket-border p-5 h-[120px] animate-shimmer"
+                />
+              ))}
+            </div>
           </div>
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4">

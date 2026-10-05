@@ -9,6 +9,7 @@ import RequireAuth from "../../components/RequireAuth";
 import BookingCard from "../../components/BookingCard";
 import ErrorText from "../../components/ErrorText";
 import Icon from "../../components/Icon";
+import LoadingSpinner from "../../components/LoadingSpinner";
 
 function Dashboard() {
   const { user, refresh } = useAuth();
@@ -139,10 +140,13 @@ function Dashboard() {
         <ErrorText>{error}</ErrorText>
 
         {loading ? (
-          <div className="grid sm:grid-cols-2 gap-4 mt-2">
-            {Array.from({ length: 4 }).map((_, i) => (
-              <div key={i} className="rounded-2xl ticket-border h-32 animate-shimmer" />
-            ))}
+          <div className="mt-2">
+            <LoadingSpinner label="Loading your bookings..." className="mb-4" />
+            <div className="grid sm:grid-cols-2 gap-4">
+              {Array.from({ length: 4 }).map((_, i) => (
+                <div key={i} className="rounded-2xl ticket-border h-32 animate-shimmer" />
+              ))}
+            </div>
           </div>
         ) : bookings.length === 0 ? (
           <motion.div
