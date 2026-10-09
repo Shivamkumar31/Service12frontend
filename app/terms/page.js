@@ -1,6 +1,6 @@
 import StaticPageLayout from "../../components/StaticPageLayout";
 
-export const metadata = { title: "Terms of service", description: "Getworkfy's terms of service.", alternates: { canonical: "/terms" } };
+export const metadata = { title: { absolute: "Terms of Service | Getworkfy" }, description: "Read the terms that govern use of Getworkfy and its local-services marketplace.", alternates: { canonical: "/terms" } };
 
 export default function TermsPage() {
   return (

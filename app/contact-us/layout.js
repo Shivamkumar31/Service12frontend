@@ -1,7 +1,7 @@
 const SITE_URL = "https://www.getworkfy.in";
 
 export const metadata = {
-  title: "Contact us",
+  title: { absolute: "Contact Getworkfy | Local Service Professionals" },
   description: "Contact Getworkfy for questions, feedback, partnerships, and support.",
   alternates: { canonical: `${SITE_URL}/contact-us` },
 };

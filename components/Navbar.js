@@ -41,6 +41,14 @@ export default function Navbar() {
           </Link>
 
           <nav className="hidden items-center gap-5 text-sm md:flex">
+            <Link href="/" className="relative text-slate-600 hover:text-[#101B2B] transition-colors group">
+              Home
+              <span className="absolute left-0 -bottom-1 w-0 h-[1.5px] bg-[#E8A33D] transition-all duration-300 group-hover:w-full" />
+            </Link>
+            <Link href="/#services" className="relative text-slate-600 hover:text-[#101B2B] transition-colors group hidden lg:inline-block">
+              Services
+              <span className="absolute left-0 -bottom-1 w-0 h-[1.5px] bg-[#E8A33D] transition-all duration-300 group-hover:w-full" />
+            </Link>
             <Link
               href="/workers"
               className="relative text-slate-600 hover:text-[#101B2B] transition-colors group hidden sm:inline-block"
@@ -73,6 +81,13 @@ export default function Navbar() {
                     Sign up
                   </Link>
                 </motion.div>
+                <Link
+                  href="/become-worker"
+                  className="relative text-slate-600 hover:text-[#101B2B] transition-colors group hidden lg:inline-block"
+                >
+                  Become a worker
+                  <span className="absolute left-0 -bottom-1 w-0 h-[1.5px] bg-[#E8A33D] transition-all duration-300 group-hover:w-full" />
+                </Link>
               </>
             )}
 
@@ -155,12 +170,15 @@ export default function Navbar() {
         {menuOpen && (
           <div id="mobile-navigation" className="border-t border-slate-200 bg-white px-4 pb-4 pt-3 md:hidden">
             <nav className="flex flex-col gap-1 text-sm" aria-label="Mobile navigation">
+              <Link onClick={closeMenu} href="/" className="rounded-xl px-3 py-3 font-medium text-slate-700 hover:bg-[#F7F5F0]">Home</Link>
+              <Link onClick={closeMenu} href="/#services" className="rounded-xl px-3 py-3 font-medium text-slate-700 hover:bg-[#F7F5F0]">Services</Link>
               <Link onClick={closeMenu} href="/workers" className="rounded-xl px-3 py-3 font-medium text-slate-700 hover:bg-[#F7F5F0]">Find workers</Link>
               <Link onClick={closeMenu} href="/how-it-works" className="rounded-xl px-3 py-3 font-medium text-slate-700 hover:bg-[#F7F5F0]">How it works</Link>
               {!loading && !user && (
                 <>
                   <Link onClick={closeMenu} href="/login" className="rounded-xl px-3 py-3 font-medium text-slate-700 hover:bg-[#F7F5F0]">Login</Link>
                   <Link onClick={closeMenu} href="/register" className="mt-1 rounded-xl bg-[#101B2B] px-3 py-3 text-center font-medium text-white">Create an account</Link>
+                  <Link onClick={closeMenu} href="/become-worker" className="rounded-xl px-3 py-3 font-medium text-slate-700 hover:bg-[#F7F5F0]">Become a worker</Link>
                 </>
               )}
               {!loading && user && (

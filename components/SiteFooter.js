@@ -20,7 +20,7 @@ export default function SiteFooter() {
                 className="h-12 w-auto max-w-[210px] object-contain"
               />
             </Link>
-            <p className="text-sm text-slate-400 mt-3 leading-relaxed max-w-[220px]">Verified local workers, booked in minutes.</p>
+            <p className="text-sm text-slate-400 mt-3 leading-relaxed max-w-[220px]">Find trusted local service professionals near you.</p>
           </div>
           {Object.entries(FOOTER_LINKS).map(([heading, links]) => (
             <div key={heading}>

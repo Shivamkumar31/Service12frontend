@@ -40,10 +40,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }));
 
   try {
-    const response = await fetch(`${API_URL}/categories`, { next: { revalidate: 3600 } });
-    if (!response.ok) return entries;
+    const [categoryResponse, workerResponse] = await Promise.all([
+      fetch(`${API_URL}/categories`, { next: { revalidate: 3600 } }),
+      fetch(`${API_URL}/workers`, { next: { revalidate: 3600 } }),
+    ]);
+    const { categories = [] } = categoryResponse.ok ? await categoryResponse.json() : {};
+    const workerData = workerResponse.ok ? await workerResponse.json() : {};
+    const workers = workerData.workers || workerData.data?.workers || [];
 
-    const { categories = [] } = await response.json();
     return [
       ...entries,
       ...categories.map((category: { name: string }) => ({
@@ -51,6 +55,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         changeFrequency: "weekly" as const,
         priority: 0.8,
       })),
+      ...workers
+        .filter((worker: { _id?: string; id?: string }) => worker._id || worker.id)
+        .map((worker: { _id?: string; id?: string; updatedAt?: string }) => ({
+          url: `${baseUrl}/workers/${worker._id || worker.id}`,
+          lastModified: worker.updatedAt ? new Date(worker.updatedAt) : undefined,
+          changeFrequency: "weekly" as const,
+          priority: 0.7,
+        })),
     ];
   } catch {
     return entries;

@@ -1,6 +1,6 @@
 import StaticPageLayout from "../../components/StaticPageLayout";
 
-export const metadata = { title: "Privacy policy", description: "Getworkfy's privacy policy.", alternates: { canonical: "/privacy" } };
+export const metadata = { title: { absolute: "Privacy Policy | Getworkfy" }, description: "Read how Getworkfy collects, uses, and protects your information.", alternates: { canonical: "/privacy" } };
 
 export default function PrivacyPage() {
   return (

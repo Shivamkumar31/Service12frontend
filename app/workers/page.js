@@ -2,7 +2,7 @@ import WorkersClient from "./WorkersClient";
 import SiteFooter from "../../components/SiteFooter";
 
 export const metadata = {
-  title: "Find Local Service Professionals Near You",
+  title: { absolute: "Find Local Workers | Getworkfy" },
 
   description:
     "Find and book verified local service professionals near you. Discover plumbers, electricians, tutors, carpenters, cleaners and other trusted workers on Getworkfy.",
@@ -23,7 +23,7 @@ export const metadata = {
   },
 
   openGraph: {
-    title: "Find Local Service Professionals Near You | Getworkfy",
+    title: "Find Local Workers | Getworkfy",
 
     description:
       "Discover and book trusted plumbers, electricians, tutors and other local service professionals near you.",

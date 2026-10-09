@@ -1,6 +1,6 @@
 import StaticPageLayout from "../../components/StaticPageLayout";
 
-export const metadata = { title: { absolute: "How Getworkfy Works | Local Services" }, description: "Learn how to find and book local service professionals with Getworkfy.", alternates: { canonical: "https://www.getworkfy.in/how-it-works" } };
+export const metadata = { title: { absolute: "How Getworkfy Works | Book Local Service Professionals" }, description: "Learn how to find, compare, and book trusted local service professionals through Getworkfy.", alternates: { canonical: "https://www.getworkfy.in/how-it-works" } };
 
 const STEPS = [
   { n: "01", t: "Search your need", d: "Pick a category — plumbing, electrical, tutoring, and more — or search directly." },

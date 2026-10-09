@@ -10,12 +10,12 @@ export const metadata = {
   metadataBase: new URL(SITE_URL),
 
   title: {
-    default: "Getworkfy | Find Local Service Professionals Near You",
+    default: "Getworkfy – Book Verified Local Workers Near You",
     template: "%s | Getworkfy",
   },
 
   description:
-    "Getworkfy helps you find and book verified local workers near you. Discover trusted plumbers, electricians, tutors, carpenters, cleaners and other local service professionals.",
+    "Getworkfy helps you find and book verified local workers near you, including plumbers, electricians, tutors and other service professionals.",
 
   keywords: [
     "Getworkfy",
@@ -67,9 +67,9 @@ export const metadata = {
     locale: "en_IN",
     url: SITE_URL,
     siteName: "Getworkfy",
-    title: "Getworkfy | Find Local Service Professionals Near You",
+    title: "Getworkfy – Book Verified Local Workers Near You",
     description:
-      "Find and book trusted local workers near you. Discover verified plumbers, electricians, tutors, carpenters and more with Getworkfy.",
+      "Find and book verified local workers and service professionals near you.",
 
     images: [
       {
@@ -83,9 +83,9 @@ export const metadata = {
 
   twitter: {
     card: "summary_large_image",
-    title: "Getworkfy | Find Local Service Professionals Near You",
+    title: "Getworkfy – Book Verified Local Workers Near You",
     description:
-      "Find and book trusted local workers near you with Getworkfy.",
+      "Find and book verified local workers and service professionals near you.",
     images: ["/og-image.png"],
   },
 

@@ -1,6 +1,6 @@
 import StaticPageLayout from "../../components/StaticPageLayout";
 
-export const metadata = { title: { absolute: "About Getworkfy | Local Service Professionals" }, description: "Learn how Getworkfy helps people find local service professionals.", alternates: { canonical: "https://www.getworkfy.in/about" } };
+export const metadata = { title: { absolute: "About Getworkfy | Local Service Professionals" }, description: "Learn about Getworkfy and our mission to connect people with trusted local service professionals.", alternates: { canonical: "https://www.getworkfy.in/about" } };
 
 export default function AboutPage() {
   return (

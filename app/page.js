@@ -5,7 +5,9 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { api } from "../lib/api";
 import ErrorText from "../components/ErrorText";
+import SiteFooter from "../components/SiteFooter";
 import LoadingSpinner from "../components/LoadingSpinner";
+import ChatbotWidget from "../components/ChatbotWidget";
 
 function slugify(text = "") {
   return text.toString().toLowerCase().trim().replace(/[^a-z0-9\s-]/g, "").replace(/\s+/g, "-").replace(/-+/g, "-");
@@ -21,8 +23,9 @@ const ACCENTS = [
   { bg: "#F0EDE4", ring: "#8A7A56" }, // brass
 ];
 
+/*
 const FOOTER_LINKS = {
-  Company: [
+  Contact: [
     { label: "About us", href: "/about" },
     { label: "Careers", href: "/careers" },
     { label: "Blog", href: "/blog" },
@@ -44,12 +47,13 @@ const FOOTER_LINKS = {
     { label: "Privacy policy", href: "/privacy" },
     { label: "Cookie policy", href: "/cookies" },
   ],
-  Founders: [
-    {label:"About me", href:"/about-me"},
+  Company: [
+    { label: "About Getworkfy", href: "/about" },
     { label: "Contact us", href: "/contact-us" },
     { label: "Investor relations", href: "/investors" },
-  ],          
+  ],
 };
+*/
 
 export default function HomePage() {
   const [categories, setCategories] = useState([]);
@@ -216,7 +220,7 @@ export default function HomePage() {
       </section>
 
       {/* ---------------- CATEGORIES ---------------- */}
-      <section className="max-w-6xl mx-auto px-4 sm:px-6 py-16">
+      <section id="services" className="max-w-6xl mx-auto px-4 sm:px-6 py-16">
         <div className="flex items-end justify-between mb-8">
           <div>
             <h2 className="font-display text-2xl sm:text-3xl text-[#101B2B]">
@@ -296,6 +300,7 @@ export default function HomePage() {
       </section>
 
       {/* ---------------- FOOTER ---------------- */}
+      {/*
       <footer className="bg-[#101B2B] text-slate-300 border-t border-white/10">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-14 pb-8">
           <div className="grid sm:grid-cols-2 md:grid-cols-5 gap-10">
@@ -340,6 +345,9 @@ export default function HomePage() {
           </div>
         </div>
       </footer>
+      */}
+      <SiteFooter />
+      <ChatbotWidget />
     </div>
   );
 }

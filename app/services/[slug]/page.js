@@ -70,9 +70,9 @@ export async function generateMetadata({ params }) {
   const name = category.name;
 
   return {
-    title: `${name} Services Near You`,
+    title: `${name} Near You`,
 
-    description: `Find trusted and verified ${name.toLowerCase()} service providers near you. Compare professionals and book local ${name.toLowerCase()} services with Getworkfy.`,
+    description: `Find and book verified ${name.toLowerCase()} near you through Getworkfy.`,
 
     keywords: [
       `${name} near me`,
@@ -89,8 +89,8 @@ export async function generateMetadata({ params }) {
     },
 
     openGraph: {
-      title: `${name} Services Near You | Getworkfy`,
-      description: `Find trusted ${name.toLowerCase()} service providers near you with Getworkfy.`,
+      title: `${name} Near You | Getworkfy`,
+      description: `Find and book verified ${name.toLowerCase()} near you through Getworkfy.`,
       url: `${SITE_URL}/services/${slug}`,
       siteName: "Getworkfy",
       type: "website",
@@ -99,8 +99,8 @@ export async function generateMetadata({ params }) {
 
     twitter: {
       card: "summary_large_image",
-      title: `${name} Services Near You | Getworkfy`,
-      description: `Find trusted ${name.toLowerCase()} service providers near you.`,
+      title: `${name} Near You | Getworkfy`,
+      description: `Find and book verified ${name.toLowerCase()} near you through Getworkfy.`,
     },
   };
 }
