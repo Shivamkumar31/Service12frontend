@@ -13,7 +13,7 @@ export default function LoadingSpinner({ label = "Loading...", size = "md", clas
     >
       <span
         aria-hidden="true"
-        className={`${spinnerSizes[size] || spinnerSizes.md} rounded-full border-2 border-slate-200 border-t-[#E8A33D] animate-spin motion-reduce:animate-none`}
+        className={`${spinnerSizes[size] || spinnerSizes.md} shrink-0 rounded-full border-2 border-slate-200 border-t-[#E8A33D] animate-spin motion-reduce:animate-none`}
       />
       <span>{label}</span>
     </div>

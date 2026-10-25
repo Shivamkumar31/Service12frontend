@@ -1,6 +1,11 @@
 import StaticPageLayout from "../../components/StaticPageLayout";
 
-export const metadata = { title: "Blog", description: "Guides, updates, and stories from Getworkfy.", alternates: { canonical: "/blog" } };
+export const metadata = {
+  title: "Blog",
+  description: "Guides, updates, and stories from Getworkfy.",
+  alternates: { canonical: "/blog" },
+  robots: { index: false, follow: true },
+};
 
 const POSTS = [
   { title: "5 questions to ask before hiring an electrician", tag: "Guides" },

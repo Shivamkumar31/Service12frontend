@@ -100,8 +100,14 @@ export default function WorkerProfilePage() {
 
   if (loading) {
     return (
-      <div className="bg-[#F7F5F0] min-h-screen flex items-center justify-center">
-        <LoadingSpinner label="Loading worker profile..." />
+      <div className="bg-[#F7F5F0] min-h-[70vh] flex items-center justify-center px-4">
+        <div className="w-full max-w-sm rounded-3xl bg-white ticket-border px-6 py-8 text-center shadow-sm">
+          <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-[#FFF5E5]">
+            <span className="h-7 w-7 rounded-full border-[3px] border-[#E8A33D]/30 border-t-[#E8A33D] animate-spin motion-reduce:animate-none" />
+          </div>
+          <LoadingSpinner label="Loading worker profile..." />
+          <p className="mt-2 text-xs text-slate-400">Please wait a moment while we load the details.</p>
+        </div>
       </div>
     );
   }
@@ -376,6 +382,16 @@ export default function WorkerProfilePage() {
                 )}
                 {booking ? "Booking..." : user ? "Request booking" : "Log in to book"}
               </motion.button>
+              {booking && (
+                <p
+                  role="status"
+                  aria-live="polite"
+                  className="flex items-center justify-center gap-2 rounded-xl border border-[#E8A33D]/30 bg-[#FFF5E5] px-3 py-2.5 text-xs font-medium text-[#8A5A12]"
+                >
+                  <span className="h-3.5 w-3.5 rounded-full border-2 border-[#E8A33D]/40 border-t-[#E8A33D] animate-spin motion-reduce:animate-none" />
+                  Sending your booking request securely. Please wait...
+                </p>
+              )}
             </form>
           </motion.div>
         </div>

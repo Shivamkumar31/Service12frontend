@@ -146,6 +146,7 @@ export default function Navbar() {
                   Hi, <span className="font-medium text-[#101B2B]">{user.name}</span>
                 </span>
                 <button
+                  type="button"
                   onClick={handleLogout}
                   className="text-sm font-medium text-slate-600 border border-slate-300 px-3.5 py-1.5 rounded-full hover:border-[#101B2B] hover:text-[#101B2B] transition-colors"
                 >
@@ -190,7 +191,7 @@ export default function Navbar() {
                   {isAdmin && <Link onClick={closeMenu} href="/admin" className="rounded-xl px-3 py-3 font-medium text-slate-700 hover:bg-[#F7F5F0]">Admin</Link>}
                   <div className="my-1 border-t border-slate-100" />
                   <p className="px-3 py-2 text-xs text-slate-500">Signed in as <span className="font-semibold text-[#101B2B]">{user.name}</span></p>
-                  <button onClick={handleLogout} className="rounded-xl px-3 py-3 text-left font-medium text-slate-700 hover:bg-[#F7F5F0]">Log out</button>
+                  <button type="button" onClick={handleLogout} className="rounded-xl px-3 py-3 text-left font-medium text-slate-700 hover:bg-[#F7F5F0]">Log out</button>
                 </>
               )}
             </nav>

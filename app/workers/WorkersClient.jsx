@@ -237,9 +237,9 @@ function WorkersContent() {
         </div>
 
         {/* filter panel — styled like a job-ticket control strip */}
-        <div className="rounded-2xl bg-white ticket-border shadow-sm p-5 mb-8">
-          <div className="flex flex-wrap gap-4 items-end">
-            <div className="flex-1 min-w-[180px]">
+        <div className="rounded-2xl bg-white ticket-border shadow-sm p-4 sm:p-6 mb-8">
+          <div className="grid gap-5 lg:grid-cols-[minmax(180px,0.8fr)_minmax(300px,1.5fr)_auto] lg:items-end">
+            <div>
               <label className="text-xs font-semibold uppercase tracking-wide text-slate-500 mb-1.5 block">
                 Category
               </label>
@@ -257,17 +257,19 @@ function WorkersContent() {
               </select>
             </div>
 
-            <div className="flex-1 min-w-[260px] max-w-md">
-              <div className="flex items-center justify-between mb-1.5">
-                <label htmlFor="radius-range" className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-                  Search radius
-                </label>
-                <span className="inline-flex items-baseline gap-1 rounded-full bg-[#FFF5E5] px-3 py-1 text-sm font-semibold text-[#101B2B]">
-                  {radiusKm}
-                  <span className="text-[11px] font-medium text-slate-500">km</span>
+            <div>
+              <div className="flex items-start justify-between gap-4 mb-2">
+                <div>
+                  <label htmlFor="radius-range" className="text-xs font-semibold uppercase tracking-wide text-slate-500 block">
+                    Search radius
+                  </label>
+                  <p className="text-xs text-slate-400 mt-1">How far should we look for professionals?</p>
+                </div>
+                <span className="inline-flex shrink-0 items-baseline gap-1 rounded-full bg-[#FFF5E5] px-3 py-1.5 text-sm font-semibold text-[#101B2B]">
+                  {radiusKm}<span className="text-[11px] font-medium text-slate-500">km</span>
                 </span>
               </div>
-              <div className="rounded-xl border border-slate-200 bg-[#F7F5F0] px-4 py-3">
+              <div className="rounded-2xl border border-slate-200 bg-[#F7F5F0] px-4 py-4">
                 <input
                   id="radius-range"
                   type="range"
@@ -283,95 +285,114 @@ function WorkersContent() {
                     }%, #dbe3ea ${((Number(radiusKm) - 1) / 999) * 100}%, #dbe3ea 100%)`,
                   }}
                   aria-label="Search radius in kilometres"
+                  aria-valuetext={`${radiusKm} kilometres`}
                 />
-                <div className="mt-1 flex justify-between text-[10px] font-medium uppercase tracking-wide text-slate-400">
+                <div className="mt-2 flex justify-between text-[10px] font-medium uppercase tracking-wide text-slate-400">
                   <span>1 km</span>
-                  <span>Nearby</span>
+                  <span>25 km</span>
+                  <span>100 km</span>
                   <span>1000 km</span>
                 </div>
               </div>
+              <div className="mt-3 flex flex-wrap items-center gap-2">
+                <span className="text-xs text-slate-500">Quick select:</span>
+                {[5, 10, 25, 50].map((value) => (
+                  <button
+                    key={value}
+                    type="button"
+                    onClick={() => setRadiusKm(value)}
+                    className={`rounded-full border px-3 py-1 text-xs font-medium transition ${
+                      Number(radiusKm) === value
+                        ? "border-[#E8A33D] bg-[#FFF5E5] text-[#101B2B]"
+                        : "border-slate-200 bg-white text-slate-600 hover:border-[#E8A33D] hover:text-[#101B2B]"
+                    }`}
+                    aria-pressed={Number(radiusKm) === value}
+                  >
+                    {value} km
+                  </button>
+                ))}
+              </div>
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="grid gap-3 sm:grid-cols-[auto_1fr] lg:grid-cols-1">
               <label htmlFor="radius-number" className="sr-only">Exact radius in kilometres</label>
-              <input
-                id="radius-number"
-                type="number"
-                min="1"
-                max="1000"
-                className="w-20 rounded-xl border border-slate-200 bg-[#F7F5F0] px-3 py-2.5 text-sm text-[#101B2B] focus:outline-none focus:ring-2 focus:ring-[#E8A33D]/50 focus:border-[#E8A33D] transition"
-                value={radiusKm}
-                onChange={(e) => setRadiusKm(e.target.value)}
-                aria-label="Exact radius in kilometres"
-              />
-              <span className="text-xs text-slate-500">km</span>
+              <div className="flex items-center gap-2">
+                <input
+                  id="radius-number"
+                  type="number"
+                  min="1"
+                  max="1000"
+                  className="w-full rounded-xl border border-slate-200 bg-[#F7F5F0] px-3 py-2.5 text-sm text-[#101B2B] focus:outline-none focus:ring-2 focus:ring-[#E8A33D]/50 focus:border-[#E8A33D] transition"
+                  value={radiusKm}
+                  onChange={(e) => setRadiusKm(e.target.value)}
+                  aria-label="Exact radius in kilometres"
+                />
+                <span className="text-xs text-slate-500">km</span>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                <motion.button
+                  type="button"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={detectLocation}
+                  disabled={locating}
+                  className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-medium transition-colors hover:border-[#2E6E8E] hover:text-[#2E6E8E] disabled:opacity-60"
+                >
+                  {locating ? (
+                    <>
+                      <span className="w-3.5 h-3.5 border-2 border-slate-300 border-t-[#2E6E8E] rounded-full animate-spin" />
+                      Detecting...
+                    </>
+                  ) : coords ? (
+                    <><Icon name="pin" size={16} /> Location set</>
+                  ) : (
+                    <><Icon name="pin" size={16} /> Use my location</>
+                  )}
+                </motion.button>
+                <motion.button
+                  type="button"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={search}
+                  disabled={loading}
+                  className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-[#101B2B] px-5 py-2.5 text-sm font-medium text-white shadow-sm transition-colors hover:bg-[#1c2f47] disabled:opacity-60"
+                >
+                  {loading ? "Searching..." : "Search"}
+                </motion.button>
+              </div>
+              {coords && (
+                <button
+                  type="button"
+                  onClick={clearLocation}
+                  className="text-left text-xs text-slate-500 underline underline-offset-4 hover:text-[#2E6E8E]"
+                >
+                  Clear saved search location
+                </button>
+              )}
             </div>
-
-            <motion.button
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.97 }}
-              onClick={detectLocation}
-              disabled={locating}
-              className="inline-flex items-center gap-1.5 text-sm font-medium border border-slate-200 px-4 py-2.5 rounded-xl hover:border-[#2E6E8E] hover:text-[#2E6E8E] transition-colors disabled:opacity-60"
-            >
-              {locating ? (
-                <>
-                  <span className="w-3.5 h-3.5 border-2 border-slate-300 border-t-[#2E6E8E] rounded-full animate-spin" />
-                  Detecting...
-                </>
-              ) : coords ? (
-                <><Icon name="pin" size={16} /> Location set</>
-              ) : (
-                <><Icon name="pin" size={16} /> Use my location</>
-              )}
-            </motion.button>
-            {coords && (
-              <button
-                type="button"
-                onClick={clearLocation}
-                className="text-sm text-slate-500 underline underline-offset-4 hover:text-[#2E6E8E]"
-              >
-                Change location
-              </button>
-            )}
-
-            <motion.button
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.97 }}
-              onClick={search}
-              disabled={loading}
-              className="inline-flex items-center gap-1.5 bg-[#101B2B] text-white text-sm font-medium px-5 py-2.5 rounded-xl hover:bg-[#1c2f47] transition-colors disabled:opacity-60 shadow-sm"
-            >
-              {loading ? (
-                <>
-                  <span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                  Searching...
-                </>
-              ) : (
-                "Search"
-              )}
-            </motion.button>
           </div>
           {locationMessage && (
             <p
               role="status"
-              className={`mt-3 text-sm ${
+              className={`mt-5 rounded-xl border px-3 py-2 text-sm ${
                 locationMessage.startsWith("Location detected for this search, but")
-                  ? "text-amber-700"
-                  : "text-[#3F7D5C]"
+                  ? "border-amber-200 bg-amber-50 text-amber-700"
+                  : "border-emerald-200 bg-emerald-50 text-[#3F7D5C]"
               }`}
             >
               {locationMessage}
             </p>
           )}
-          <p className="text-sm text-slate-500 mt-4 flex items-center gap-2" aria-live="polite">
+          <p className="text-sm text-slate-500 mt-5 flex items-start gap-2 border-t border-slate-100 pt-4" aria-live="polite">
             {loading && (
-              <span className="w-3.5 h-3.5 border-2 border-slate-300 border-t-[#2E6E8E] rounded-full animate-spin" />
+              <span className="w-3.5 h-3.5 shrink-0 border-2 border-slate-300 border-t-[#2E6E8E] rounded-full animate-spin motion-reduce:animate-none" />
             )}
             {coords
               ? `Showing professionals within ${radiusKm} km of your selected location${
                   locationAccuracy ? ` (accuracy about ${Math.round(locationAccuracy)} m)` : ""
                 }.`
+              : loading
+              ? "Please wait while we search available professionals."
               : `Showing verified professionals${radiusKm ? ` within ${radiusKm} km` : ""}. Use your location for more accurate results.`}
           </p>
         </div>
@@ -381,7 +402,7 @@ function WorkersContent() {
         {/* results */}
         {loading ? (
           <div className="mt-2">
-            <LoadingSpinner label="Loading workers..." className="mb-4" />
+            <LoadingSpinner label="Finding professionals near you..." className="mb-4" />
             <div className="grid sm:grid-cols-2 gap-4">
               {Array.from({ length: 4 }).map((_, i) => (
                 <div key={i} className="rounded-2xl ticket-border h-32 animate-shimmer" />

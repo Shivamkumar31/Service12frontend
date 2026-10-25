@@ -7,7 +7,7 @@ const HIGHLIGHTS = [
   { label: "Founded by", value: "IIIT Kottayam" },
 ];
 
-const CONTACT_EMAIL = "your.email@example.com"; // 👉 replace
+const CONTACT_EMAIL = "support@getworkfy.in";
 
 export default function InvestorRelationsPage() {
   return (

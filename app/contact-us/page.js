@@ -3,11 +3,10 @@
 import { useState } from "react";
 import SiteFooter from "../../components/SiteFooter";
 
-// 👉 replace these with your real details
 const CONTACT = {
-  email: "your.email@example.com",
-  phoneDisplay: "+91 00000 00000",
-  whatsappNumber: "910000000000", // country code + number, no + or spaces
+  email: "support@getworkfy.in",
+  phoneDisplay: "+91 95082 80822",
+  whatsappNumber: "919508280822",
 };
 
 export default function ContactUsPage() {

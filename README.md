@@ -8,13 +8,13 @@ real backend endpoint. Polish/design pass can come later.
 
 ```bash
 npm install
-cp .env.local.example .env.local
+cp .env.example .env.local
 ```
 
 Edit `.env.local` if your backend runs somewhere other than `http://localhost:5000`:
 
 ```
-NEXT_PUBLIC_API_URL=http://localhost:5000/api/v1
+NEXT_PUBLIC_API_URL=https://servicehub12-p6mo.onrender.com/api/v1
 ```
 
 ## 2. Run
@@ -130,7 +130,6 @@ directly in the UI without you needing to open devtools.
 7. Log back in as the worker, go to `/worker/dashboard`, **Accept** the booking,
    then walk it through **Start job → Mark completed**.
 8. Log back in as the customer, `/dashboard` should reflect the updated status.
-
 
 
 

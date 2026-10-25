@@ -60,12 +60,18 @@ export default function HomePage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
+  const loadCategories = () => {
+    setLoading(true);
+    setError("");
     api
       .listCategories()
-      .then((res) => setCategories(res.categories))
-      .catch((err) => setError(err.message))
+      .then((res) => setCategories(Array.isArray(res.categories) ? res.categories : []))
+      .catch((err) => setError(err.message || "We could not load services right now."))
       .finally(() => setLoading(false));
+  };
+
+  useEffect(() => {
+    loadCategories();
   }, []);
 
   return (
@@ -232,7 +238,19 @@ export default function HomePage() {
           </div>
         </div>
 
-        <ErrorText>{error}</ErrorText>
+        {error && (
+          <div className="mt-5 max-w-2xl">
+            <ErrorText>{error}</ErrorText>
+            <button
+              type="button"
+              onClick={loadCategories}
+              disabled={loading}
+              className="mt-3 inline-flex items-center rounded-full border border-[#101B2B] px-4 py-2 text-sm font-medium text-[#101B2B] transition hover:bg-[#101B2B] hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {loading ? "Retrying..." : "Try again"}
+            </button>
+          </div>
+        )}
 
         {loading ? (
           <div>
