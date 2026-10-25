@@ -9,6 +9,7 @@ import ErrorText from "../../../components/ErrorText";
 import StatusBadge from "../../../components/StatusBadge";
 import LoadingSpinner from "../../../components/LoadingSpinner";
 import CancelBookingModal from "../../../components/CancelBookingModal";
+import PaymentInstructions from "../../../components/PaymentInstructions";
 
 function BookingDetails() {
   const { id } = useParams();
@@ -92,6 +93,10 @@ function BookingDetails() {
                 <p className="mt-1 text-red-700 bg-red-50 p-3 rounded-xl border border-red-100">{booking.cancellationReason}</p>
               </div>
             )}
+          </div>
+
+          <div className="mt-6">
+            <PaymentInstructions booking={booking} compact />
           </div>
 
           <ErrorText>{error}</ErrorText>

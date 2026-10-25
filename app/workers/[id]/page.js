@@ -10,6 +10,7 @@ import ErrorText from "../../../components/ErrorText";
 import SiteFooter from "../../../components/SiteFooter";
 import Icon from "../../../components/Icon";
 import LoadingSpinner from "../../../components/LoadingSpinner";
+import PaymentInstructions from "../../../components/PaymentInstructions";
 
 export default function WorkerProfilePage() {
   const { id } = useParams();
@@ -79,8 +80,9 @@ export default function WorkerProfilePage() {
 
     setBooking(true);
     try {
-      await api.createBooking({ workerId: id, ...form });
+      const response = await api.createBooking({ workerId: id, ...form });
       setBookingSummary({
+        ...(response.booking || response.data?.booking || {}),
         workerName: worker.name,
         serviceName:
           worker.workerProfile?.serviceCategory?.name ||
@@ -167,6 +169,9 @@ export default function WorkerProfilePage() {
                 <span className="text-sm font-medium text-[#101B2B] text-right">
                   {bookingSummary.serviceName}
                 </span>
+              </div>
+              <div className="mt-6 text-left">
+                <PaymentInstructions booking={bookingSummary} />
               </div>
               <div className="flex justify-between gap-4">
                 <span className="text-sm text-slate-500">Date</span>

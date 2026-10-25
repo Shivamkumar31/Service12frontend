@@ -5,6 +5,7 @@ import Link from "next/link";
 import StatusBadge from "./StatusBadge";
 import Icon from "./Icon";
 import CancelBookingModal from "./CancelBookingModal";
+import PaymentInstructions from "./PaymentInstructions";
 
 const STEPS = [
   { id: "pending", label: "Requested" },
@@ -154,6 +155,11 @@ export default function BookingCard({ booking, role, onAction }) {
                   {displayDate} <span className="font-normal text-slate-500">at {displayTime}</span>
                 </p>
               </div>
+              {role === "customer" && normalizedStatus === "pending" && (
+                <div className="mt-4">
+                  <PaymentInstructions booking={booking} compact />
+                </div>
+              )}
             </div>
 
             <div className="flex items-start gap-3">

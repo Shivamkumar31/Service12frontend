@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 160 160" role="img" aria-label="Demo UPI QR code">
+  <rect width="160" height="160" rx="8" fill="#fff"/>
+  <g fill="#101b2b">
+    <path d="M8 8h48v48H8zM16 16v32h32V16zM24 24h16v16H24zM104 8h48v48h-48zM112 16v32h32V16zM120 24h16v16h-16zM8 104h48v48H8zM16 112v32h32v-32zM24 120h16v16H24z"/>
+    <path d="M72 8h8v8h-8zM88 8h8v16h-8zM64 24h16v8H64zM80 32h16v8H80zM64 48h8v16h-8zM80 48h8v8h-8zM96 48h8v16h-8zM64 72h8v8h-8zM80 72h24v8H80zM112 72h8v16h-8zM128 72h24v8h-24zM64 88h16v8H64zM88 88h8v16h-8zM104 88h16v8h-16zM128 88h8v16h-8zM144 88h8v8h-8zM64 104h8v16h-8zM80 104h16v8H80zM104 104h8v24h-8zM120 104h24v8h-24zM80 120h8v16h-8zM96 128h8v16h-8zM112 120h8v24h-8zM128 128h24v8h-24zM64 136h8v16h-8z"/>
+  </g>
+</svg>
